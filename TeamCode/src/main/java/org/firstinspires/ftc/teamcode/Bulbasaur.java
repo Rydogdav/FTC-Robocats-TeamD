@@ -34,6 +34,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
@@ -61,6 +62,9 @@ public class Bulbasaur extends LinearOpMode {
     public DcMotor rightDrive = null;
     public DcMotor leftOmni = null;
     public DcMotor rightOmni = null;
+    public Servo jewelServo = null;
+    public double  servoDegrees;
+    public double servoEquation = 1/255 * servoDegrees;
 
 
     @Override
@@ -116,6 +120,14 @@ public class Bulbasaur extends LinearOpMode {
             rightDrive.setPower(rightPower);
             rightOmni.setPower(rightPower);
 
+            if (gamepad1.b) {
+               servoDegrees = 0;
+
+            }
+            if (!gamepad1.b){
+                servoDegrees = 165;
+            }
+            jewelServo.setPosition(servoEquation);
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
