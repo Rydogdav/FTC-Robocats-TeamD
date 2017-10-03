@@ -29,6 +29,7 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -53,9 +54,9 @@ import com.qualcomm.robotcore.util.Range;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Basic: Linear OpMode", group="Linear Opmode")
+@Autonomous(name="autonomous red", group="Linear Opmode")
 
-public class Bulbasaur extends LinearOpMode {
+public class Ivysaur extends LinearOpMode {
 
     // Declare OpMode members.
     public ElapsedTime runtime = new ElapsedTime();
@@ -95,50 +96,33 @@ public class Bulbasaur extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
         runtime.reset();
+        leftDrive.setPower(-.35);
+        leftOmni.setPower(-.35);
+        rightDrive.setPower(-.35);
+        rightOmni.setPower(-.35);
+        sleep(2000);
+        leftDrive.setPower(0);
+        leftOmni.setPower(0);
+        rightOmni.setPower(0);
+        rightDrive.setPower(0);
+        jewelServo.setPosition(165);
+        if (jewelSensor.blue() > jewelSensor.red()) {
+            rightDrive.setPower(.35);
+            rightOmni.setPower(.35);
+            leftDrive.setPower(-.35);
+            rightOmni.setPower(-.35);
+            sleep(500);
 
-        // run until the end of the match (driver presses STOP)
-        while (opModeIsActive()) {
 
-            // Setup a variable for each drive wheel to save power level for telemetry
-            double leftPower;
-            double rightPower;
 
-            // Choose to drive using either Tank Mode, or POV Mode
-            // Comment out the method that's not used.  The default below is POV.
+        }
 
-            // POV Mode uses left stick to go forward, and right stick to turn.
-            // - This uses basic math to combine motions and is easier to drive straight.
-            double drive = gamepad1.left_stick_y;
-            double turn  =  gamepad1.right_stick_x;
-            leftPower    = Range.clip(drive + turn, -1.0, 1.0) ;
-            rightPower   = Range.clip(drive - turn, -1.0, 1.0) ;
 
-            // Tank Mode uses one stick to control each wheel.
-            // - This requires no math, but it is hard to drive forward slowly and keep straight.
-            // leftPower  = -gamepad1.left_stick_y ;
-            // rightPower = -gamepad1.right_stick_y ;
 
-            // Send calculated power to wheels
-            leftDrive.setPower(leftPower);
-            leftOmni.setPower(leftPower);
-            rightDrive.setPower(rightPower);
-            rightOmni.setPower(rightPower);
 
-            if (gamepad1.b) {
-               servoDegrees = 165;
 
-            }
-            if (!gamepad1.b){
-                servoDegrees = 0;
-            }
 
-            jewelServo.setPosition(servoEquation);
-            // Show the elapsed game time and wheel power.
-            telemetry.addData("Status", "Run Time: " + runtime.toString());
-            telemetry.addData("Color red ", jewelSensor.red());
-            telemetry.addData("Color blue ", jewelSensor.blue());
-            telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
-            telemetry.update();
+
         }
     }
-}
+
