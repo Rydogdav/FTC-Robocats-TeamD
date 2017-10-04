@@ -110,13 +110,24 @@ public class Ivysaur extends LinearOpMode {
             rightDrive.setPower(.35);
             rightOmni.setPower(.35);
             leftDrive.setPower(-.35);
-            rightOmni.setPower(-.35);
-            sleep(500);
-
-
-
+            leftOmni.setPower(-.35);
+            sleep(1000);
+            leftDrive.setPower(0);
+            leftOmni.setPower(0);
+            rightOmni.setPower(0);
+            rightDrive.setPower(0);
         }
-
+        if (jewelSensor.blue() < jewelSensor.red()) {
+            rightDrive.setPower(-.35);
+            rightOmni.setPower(-.35);
+            leftDrive.setPower(.35);
+            leftOmni.setPower(.35);
+            sleep(1000);
+            leftDrive.setPower(0);
+            leftOmni.setPower(0);
+            rightOmni.setPower(0);
+            rightDrive.setPower(0);
+        }
 
 
 
