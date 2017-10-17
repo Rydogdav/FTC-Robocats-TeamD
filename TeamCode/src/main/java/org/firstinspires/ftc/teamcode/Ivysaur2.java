@@ -32,7 +32,9 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import java.lang.Thread.*;
 
@@ -73,6 +75,16 @@ public class Ivysaur2 extends LinearOpMode {
     HardwarePushbot robot   = new HardwarePushbot();   // Use a Pushbot's hardware
     private ElapsedTime     runtime = new ElapsedTime();
 
+    public ElapsedTime runtime = new ElapsedTime();
+    public DcMotor motorFrontLeft = null;
+    public DcMotor motorFrontRight = null;
+    public DcMotor motorBackLeft = null;
+    public DcMotor motorBackRight = null;
+    public Servo jewelServo = null;
+    public ColorSensor jewelSensor = null;
+    public double  servoDegrees;
+    public double servoEquation = 1/255 * servoDegrees;
+
     static final double     COUNTS_PER_MOTOR_REV    = 1120 ;    // eg: TETRIX Motor Encoder
     static final double     DRIVE_GEAR_REDUCTION    = 1.0 ;     // This is < 1.0 if geared UP
     static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
@@ -94,16 +106,24 @@ public class Ivysaur2 extends LinearOpMode {
         telemetry.addData("Status", "Resetting Encoders");    //
         telemetry.update();
 
-        robot.leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorFrontLeft  = hardwareMap.get(DcMotor.class, "right_drive");
+        motorFrontRight = hardwareMap.get(DcMotor.class, "left_drive");
+        motorBackLeft = hardwareMap.get(DcMotor.class, "left_omni");
+        motorBackRight = hardwareMap.get(DcMotor.class, "right_omni");
+        jewelServo = hardwareMap.get(Servo.class, "jewel_servo");
+        jewelSensor = hardwareMap.get(ColorSensor.class, "jewel_sensor");
+        jewelSensor.enableLed(true);
 
-        robot.leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.motorFrontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.motorFrontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        robot.motorFrontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.motorFrontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         // Send telemetry message to indicate successful Encoder reset
         telemetry.addData("Path0",  "Starting at %7d :%7d",
-                          robot.leftDrive.getCurrentPosition(),
-                          robot.rightDrive.getCurrentPosition());
+                          robot.motorFrontLeft.getCurrentPosition(),
+                          robot.motorFrontRight.getCurrentPosition());
         telemetry.update();
 
         // Wait for the game to start (driver presses PLAY)
@@ -142,19 +162,19 @@ public class Ivysaur2 extends LinearOpMode {
         if (opModeIsActive()) {
 
             // Determine new target position, and pass to motor controller
-            newLeftTarget = robot.leftDrive.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
-            newRightTarget = robot.rightDrive.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
-            robot.leftDrive.setTargetPosition(newLeftTarget);
-            robot.rightDrive.setTargetPosition(newRightTarget);
+            newLeftTarget = robot.motorFrontLeft.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
+            newRightTarget = robot.motorFrontRight.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
+            robot.motorFrontLeft.setTargetPosition(newLeftTarget);
+            robot.motorFrontRight.setTargetPosition(newRightTarget);
 
             // Turn On RUN_TO_POSITION
-            robot.leftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.rightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.motorFrontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.motorFrontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
             // reset the timeout time and start motion.
             runtime.reset();
-            robot.leftDrive.setPower(Math.abs(speed));
-            robot.rightDrive.setPower(Math.abs(speed));
+            robot.motorFrontLeft.setPower(Math.abs(speed));
+            robot.motorFrontRight.setPower(Math.abs(speed));
 
             // keep looping while we are still active, and there is time left, and both motors are running.
             // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
@@ -164,23 +184,23 @@ public class Ivysaur2 extends LinearOpMode {
             // onto the next step, use (isBusy() || isBusy()) in the loop test.
             while (opModeIsActive() &&
                    (runtime.seconds() < timeoutS) &&
-                   (robot.leftDrive.isBusy() && robot.rightDrive.isBusy())) {
+                   (robot.motorFrontLeft.isBusy() && robot.motorFrontRight.isBusy())) {
 
                 // Display it for the driver.
                 telemetry.addData("Path1",  "Running to %7d :%7d", newLeftTarget,  newRightTarget);
                 telemetry.addData("Path2",  "Running at %7d :%7d",
-                                            robot.leftDrive.getCurrentPosition(),
-                                            robot.rightDrive.getCurrentPosition());
+                                            robot.motorFrontLeft.getCurrentPosition(),
+                                            robot.motorFrontRight.getCurrentPosition());
                 telemetry.update();
             }
 
             // Stop all motion;
-            robot.leftDrive.setPower(0);
-            robot.rightDrive.setPower(0);
+            robot.motorFrontLeft.setPower(0);
+            robot.motorFrontRight.setPower(0);
 
             // Turn off RUN_TO_POSITION
-            robot.leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            robot.rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            robot.motorFrontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            robot.motorFrontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
             //  sleep(250);   // optional pause after each move
         }
