@@ -62,8 +62,12 @@ public class Ivysaur extends LinearOpMode {
     public ElapsedTime runtime = new ElapsedTime();
     public DcMotor motorFrontLeft = null;
     public DcMotor motorFrontRight = null;
+
     public DcMotor motorBackLeft = null;
     public DcMotor motorBackRight = null;
+
+    public DcMotor leftOmni = null;
+    public DcMotor rightOmni = null;
     public Servo jewelServo = null;
     public ColorSensor jewelSensor = null;
     public double  servoDegrees;
@@ -78,10 +82,17 @@ public class Ivysaur extends LinearOpMode {
         // Initialize the hardware variables. Note that the strings used here as parameters
         // to 'get' must correspond to the names assigned during the robot configuration
         // step (using the FTC Robot Controller app on the phone).
+
         motorFrontLeft  = hardwareMap.get(DcMotor.class, "right_drive");
         motorFrontRight = hardwareMap.get(DcMotor.class, "left_drive");
         motorBackLeft = hardwareMap.get(DcMotor.class, "left_omni");
         motorBackRight = hardwareMap.get(DcMotor.class, "right_omni");
+
+        motorFrontLeft  = hardwareMap.get(DcMotor.class, "left_drive");
+        motorFrontRight = hardwareMap.get(DcMotor.class, "right_drive");
+        leftOmni = hardwareMap.get(DcMotor.class, "left_omni");
+        rightOmni = hardwareMap.get(DcMotor.class, "right_omni");
+
         jewelServo = hardwareMap.get(Servo.class, "jewel_servo");
         jewelSensor = hardwareMap.get(ColorSensor.class, "jewel_sensor");
         jewelSensor.enableLed(true);
@@ -89,25 +100,42 @@ public class Ivysaur extends LinearOpMode {
         // Reverse the motor that runs backwards when connected directly to the battery
         motorFrontLeft.setDirection(DcMotor.Direction.FORWARD);
         motorFrontRight.setDirection(DcMotor.Direction.REVERSE);
+
         motorBackLeft.setDirection(DcMotor.Direction.FORWARD);
         motorBackRight.setDirection(DcMotor.Direction.REVERSE);
+
+        leftOmni.setDirection(DcMotor.Direction.FORWARD);
+        rightOmni.setDirection(DcMotor.Direction.REVERSE);
+
 
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
         runtime.reset();
         motorFrontLeft.setPower(-.35);
+
         motorBackLeft.setPower(-.35);
         motorFrontRight.setPower(-.35);
         motorBackRight.setPower(-.35);
-        sleep(2000);
+        sleep(1500);                             // This was changed from 2000. then 500
         motorFrontLeft.setPower(0);
         motorBackLeft.setPower(0);
+        motorFrontRight.setPower(0);
         motorBackRight.setPower(0);
+/**
+        leftOmni.setPower(-.35);
+        motorFrontRight.setPower(-.35);
+        rightOmni.setPower(-.35);
+        sleep(2000);
+        motorFrontLeft.setPower(0);
+        leftOmni.setPower(0);
+        rightOmni.setPower(0);
+
         motorFrontRight.setPower(0);
         jewelServo.setPosition(165);
-        if (jewelSensor.blue() > jewelSensor.red()) {
+        if (jewelSensor.blue(true) > jewelSensor.red(false)) {
             motorFrontRight.setPower(.35);
+
             motorBackRight.setPower(.35);
             motorFrontLeft.setPower(-.35);
             motorBackLeft.setPower(-.35);
@@ -115,10 +143,20 @@ public class Ivysaur extends LinearOpMode {
             motorFrontLeft.setPower(0);
             motorBackLeft.setPower(0);
             motorBackRight.setPower(0);
+
+            rightOmni.setPower(.35);
+            motorFrontLeft.setPower(-.35);
+            leftOmni.setPower(-.35);
+            sleep(1000);
+            motorFrontLeft.setPower(0);
+            leftOmni.setPower(0);
+            rightOmni.setPower(0);
+
             motorFrontRight.setPower(0);
         }
-        if (jewelSensor.blue() < jewelSensor.red()) {
+        if (jewelSensor.blue(false) < jewelSensor.red(true)) {
             motorFrontRight.setPower(-.35);
+
             motorBackRight.setPower(-.35);
             motorFrontLeft.setPower(.35);
             motorBackLeft.setPower(.35);
@@ -126,8 +164,17 @@ public class Ivysaur extends LinearOpMode {
             motorFrontLeft.setPower(0);
             motorBackLeft.setPower(0);
             motorBackRight.setPower(0);
+
+            rightOmni.setPower(-.35);
+            motorFrontLeft.setPower(.35);
+            leftOmni.setPower(.35);
+            sleep(1000);
+            motorFrontLeft.setPower(0);
+            leftOmni.setPower(0);
+            rightOmni.setPower(0);
+
             motorFrontRight.setPower(0);
-        }
+        } */
 
 
 

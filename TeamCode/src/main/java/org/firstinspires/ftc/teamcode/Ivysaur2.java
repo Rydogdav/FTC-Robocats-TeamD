@@ -73,7 +73,7 @@ public class Ivysaur2 extends LinearOpMode {
 
     /* Declare OpMode members. */
     HardwarePushbot robot   = new HardwarePushbot();   // Use a Pushbot's hardware
-    private ElapsedTime     runtime = new ElapsedTime();
+    private ElapsedTime     Runtime = new ElapsedTime();
 
     public ElapsedTime runtime = new ElapsedTime();
     public DcMotor motorFrontLeft = null;
@@ -114,16 +114,16 @@ public class Ivysaur2 extends LinearOpMode {
         jewelSensor = hardwareMap.get(ColorSensor.class, "jewel_sensor");
         jewelSensor.enableLed(true);
 
-        robot.motorFrontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.motorFrontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+       motorFrontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorFrontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        robot.motorFrontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.motorFrontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motorFrontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motorFrontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         // Send telemetry message to indicate successful Encoder reset
         telemetry.addData("Path0",  "Starting at %7d :%7d",
-                          robot.motorFrontLeft.getCurrentPosition(),
-                          robot.motorFrontRight.getCurrentPosition());
+                          motorFrontLeft.getCurrentPosition(),
+                          motorFrontRight.getCurrentPosition());
         telemetry.update();
 
         // Wait for the game to start (driver presses PLAY)
@@ -162,19 +162,19 @@ public class Ivysaur2 extends LinearOpMode {
         if (opModeIsActive()) {
 
             // Determine new target position, and pass to motor controller
-            newLeftTarget = robot.motorFrontLeft.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
-            newRightTarget = robot.motorFrontRight.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
-            robot.motorFrontLeft.setTargetPosition(newLeftTarget);
-            robot.motorFrontRight.setTargetPosition(newRightTarget);
+            newLeftTarget =motorFrontLeft.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
+            newRightTarget =motorFrontRight.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
+            motorFrontLeft.setTargetPosition(newLeftTarget);
+            motorFrontRight.setTargetPosition(newRightTarget);
 
             // Turn On RUN_TO_POSITION
-            robot.motorFrontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.motorFrontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            motorFrontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            motorFrontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
             // reset the timeout time and start motion.
             runtime.reset();
-            robot.motorFrontLeft.setPower(Math.abs(speed));
-            robot.motorFrontRight.setPower(Math.abs(speed));
+            motorFrontLeft.setPower(Math.abs(speed));
+            motorFrontRight.setPower(Math.abs(speed));
 
             // keep looping while we are still active, and there is time left, and both motors are running.
             // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
@@ -184,23 +184,23 @@ public class Ivysaur2 extends LinearOpMode {
             // onto the next step, use (isBusy() || isBusy()) in the loop test.
             while (opModeIsActive() &&
                    (runtime.seconds() < timeoutS) &&
-                   (robot.motorFrontLeft.isBusy() && robot.motorFrontRight.isBusy())) {
+                   (motorFrontLeft.isBusy() && motorFrontRight.isBusy())) {
 
                 // Display it for the driver.
                 telemetry.addData("Path1",  "Running to %7d :%7d", newLeftTarget,  newRightTarget);
                 telemetry.addData("Path2",  "Running at %7d :%7d",
-                                            robot.motorFrontLeft.getCurrentPosition(),
-                                            robot.motorFrontRight.getCurrentPosition());
+                                            motorFrontLeft.getCurrentPosition(),
+                                            motorFrontRight.getCurrentPosition());
                 telemetry.update();
             }
 
             // Stop all motion;
-            robot.motorFrontLeft.setPower(0);
-            robot.motorFrontRight.setPower(0);
+            motorFrontLeft.setPower(0);
+            motorFrontRight.setPower(0);
 
             // Turn off RUN_TO_POSITION
-            robot.motorFrontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            robot.motorFrontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            motorFrontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            motorFrontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
             //  sleep(250);   // optional pause after each move
         }

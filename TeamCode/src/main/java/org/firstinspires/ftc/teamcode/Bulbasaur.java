@@ -57,15 +57,24 @@ import com.qualcomm.robotcore.util.Range;
 
 public class Bulbasaur extends LinearOpMode {
 
+    /*
+    motor pos side motorFrontLeft
+    servo desc. servoJewel
+     */
     // Declare OpMode members.
     public ElapsedTime runtime = new ElapsedTime();
     public DcMotor motorFrontLeft = null;
     public DcMotor motorFrontRight = null;
     public DcMotor motorBackLeft = null;
     public DcMotor motorBackRight = null;
+
     public Servo jewelServo = null;
     public ColorSensor jewelSensor = null;
-    public double  servoDegrees;
+
+    public Servo servoJewel = null;
+    public ColorSensor colorsensJewel = null;
+
+    public double servoDegrees;
     public double servoEquation = 1/255 * servoDegrees;
 
 
@@ -77,6 +86,7 @@ public class Bulbasaur extends LinearOpMode {
         // Initialize the hardware variables. Note that the strings used here as parameters
         // to 'get' must correspond to the names assigned during the robot configuration
         // step (using the FTC Robot Controller app on the phone).
+
         motorFrontLeft  = hardwareMap.get(DcMotor.class, "right_drive");
         motorFrontRight = hardwareMap.get(DcMotor.class, "left_drive");
         motorBackLeft = hardwareMap.get(DcMotor.class, "left_omni");
@@ -84,6 +94,15 @@ public class Bulbasaur extends LinearOpMode {
         jewelServo = hardwareMap.get(Servo.class, "jewel_servo");
         jewelSensor = hardwareMap.get(ColorSensor.class, "jewel_sensor");
         jewelSensor.enableLed(true);
+
+        motorFrontLeft  = hardwareMap.get(DcMotor.class, "left_drive");
+        motorFrontRight = hardwareMap.get(DcMotor.class, "right_drive");
+        motorBackLeft = hardwareMap.get(DcMotor.class, "left_omni");
+        motorBackRight = hardwareMap.get(DcMotor.class, "right_omni");
+        servoJewel = hardwareMap.get(Servo.class, "jewel_servo");
+        colorsensJewel = hardwareMap.get(ColorSensor.class, "jewel_sensor");
+        colorsensJewel.enableLed(true);
+
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
         motorFrontLeft.setDirection(DcMotor.Direction.FORWARD);
@@ -132,11 +151,11 @@ public class Bulbasaur extends LinearOpMode {
                 servoDegrees = 0;
             }
 
-            jewelServo.setPosition(servoEquation);
+            servoJewel.setPosition(servoEquation);
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
-            telemetry.addData("Color red ", jewelSensor.red());
-            telemetry.addData("Color blue ", jewelSensor.blue());
+            telemetry.addData("Color red ", colorsensJewel.red());
+            telemetry.addData("Color blue ", colorsensJewel.blue());
             telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
             telemetry.update();
         }
