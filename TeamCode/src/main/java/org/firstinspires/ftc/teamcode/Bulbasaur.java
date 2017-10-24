@@ -57,22 +57,13 @@ import com.qualcomm.robotcore.util.Range;
 
 public class Bulbasaur extends LinearOpMode {
 
-    /*
-    motor pos side motorFrontLeft
-    servo desc. servoJewel
-     */
-    // Declare OpMode members.
     public ElapsedTime runtime = new ElapsedTime();
     public DcMotor motorFrontLeft = null;
     public DcMotor motorFrontRight = null;
     public DcMotor motorBackLeft = null;
     public DcMotor motorBackRight = null;
-
-    public Servo jewelServo = null;
-    public ColorSensor jewelSensor = null;
-
-    public Servo servoJewel = null;
-    public ColorSensor colorsensJewel = null;
+    public DcMotor motorFrontIntake = null;
+    public DcMotor motorFrontLift = null;
 
     public double servoDegrees;
     public double servoEquation = 1/255 * servoDegrees;
@@ -83,79 +74,57 @@ public class Bulbasaur extends LinearOpMode {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
-        // Initialize the hardware variables. Note that the strings used here as parameters
-        // to 'get' must correspond to the names assigned during the robot configuration
-        // step (using the FTC Robot Controller app on the phone).
-
         motorFrontLeft  = hardwareMap.get(DcMotor.class, "right_drive");
         motorFrontRight = hardwareMap.get(DcMotor.class, "left_drive");
         motorBackLeft = hardwareMap.get(DcMotor.class, "left_omni");
         motorBackRight = hardwareMap.get(DcMotor.class, "right_omni");
-        jewelServo = hardwareMap.get(Servo.class, "jewel_servo");
-        jewelSensor = hardwareMap.get(ColorSensor.class, "jewel_sensor");
-        jewelSensor.enableLed(true);
+        motorFrontIntake = hardwareMap.get(DcMotor.class, "front_intake");
+        motorFrontLift = hardwareMap.get(DcMotor.class, "front_lift");
 
-        motorFrontLeft  = hardwareMap.get(DcMotor.class, "left_drive");
-        motorFrontRight = hardwareMap.get(DcMotor.class, "right_drive");
-        motorBackLeft = hardwareMap.get(DcMotor.class, "left_omni");
-        motorBackRight = hardwareMap.get(DcMotor.class, "right_omni");
-        servoJewel = hardwareMap.get(Servo.class, "jewel_servo");
-        colorsensJewel = hardwareMap.get(ColorSensor.class, "jewel_sensor");
-        colorsensJewel.enableLed(true);
-
-        // Most robots need the motor on one side to be reversed to drive forward
-        // Reverse the motor that runs backwards when connected directly to the battery
         motorFrontLeft.setDirection(DcMotor.Direction.FORWARD);
         motorFrontRight.setDirection(DcMotor.Direction.REVERSE);
         motorBackLeft.setDirection(DcMotor.Direction.FORWARD);
         motorBackRight.setDirection(DcMotor.Direction.REVERSE);
+        motorFrontIntake.setDirection(DcMotor.Direction.FORWARD);
+        motorFrontLift.setDirection(DcMotor.Direction.FORWARD);
 
 
-        // Wait for the game to start (driver presses PLAY)
         waitForStart();
         runtime.reset();
 
-        // run until the end of the match (driver presses STOP)
+
         while (opModeIsActive()) {
 
-            // Setup a variable for each drive wheel to save power level for telemetry
             double leftPower;
             double rightPower;
+            double liftPower = 0;
+            double intakePower = 0;
 
-            // Choose to drive using either Tank Mode, or POV Mode
-            // Comment out the method that's not used.  The default below is POV.
 
-            // POV Mode uses left stick to go forward, and right stick to turn.
-            // - This uses basic math to combine motions and is easier to drive straight.
-            double drive = gamepad1.left_stick_y;
-            double turn  =  gamepad1.right_stick_x;
-            leftPower    = Range.clip(drive + turn, -1.0, 1.0) ;
-            rightPower   = Range.clip(drive - turn, -1.0, 1.0) ;
+            leftPower  = -gamepad1.left_stick_y ;
+            rightPower = -gamepad1.right_stick_y ;
 
-            // Tank Mode uses one stick to control each wheel.
-            // - This requires no math, but it is hard to drive forward slowly and keep straight.
-            // leftPower  = -gamepad1.left_stick_y ;
-            // rightPower = -gamepad1.right_stick_y ;
+            if (gamepad1.y) liftPower = 1;
+            if (!gamepad1.y && !gamepad1.a) liftPower = 0;
+
+            if (gamepad1.a) liftPower = -1;
+
+            if (gamepad1.left_trigger > 0.5)intakePower = 1;
+            if (gamepad1.left_trigger < 0.5 && gamepad1.right_trigger < 0.5)intakePower = 0;
+
+            if (gamepad1.right_trigger > 0.5)intakePower = -1;
+
 
             // Send calculated power to wheels
             motorFrontLeft.setPower(leftPower);
             motorBackLeft.setPower(leftPower);
             motorFrontRight.setPower(rightPower);
             motorBackRight.setPower(rightPower);
+            motorFrontLift.setPower(liftPower);
+            motorFrontIntake.setPower(intakePower);
 
-            if (gamepad1.b) {
-               servoDegrees = 165;
-
-            }
-            if (!gamepad1.b){
-                servoDegrees = 0;
-            }
-
-            servoJewel.setPosition(servoEquation);
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
-            telemetry.addData("Color red ", colorsensJewel.red());
-            telemetry.addData("Color blue ", colorsensJewel.blue());
             telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
             telemetry.update();
         }

@@ -41,24 +41,10 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
 
-/**
- * This file contains an minimal example of a Linear "OpMode". An OpMode is a 'program' that runs in either
- * the autonomous or the teleop period of an FTC match. The names of OpModes appear on the menu
- * of the FTC Driver Station. When an selection is made from the menu, the corresponding OpMode
- * class is instantiated on the Robot Controller and executed.
- *
- * This particular OpMode just executes a basic Tank Drive Teleop for a two wheeled robot
- * It includes all the skeletal structure that all linear OpModes contain.
- *
- * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
- * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
- */
-
 @Autonomous(name="autonomous red", group="Linear Opmode")
 
 public class Ivysaur extends LinearOpMode {
 
-    // Declare OpMode members.
     public ElapsedTime runtime = new ElapsedTime();
     public DcMotor motorFrontLeft = null;
     public DcMotor motorFrontRight = null;
@@ -79,10 +65,6 @@ public class Ivysaur extends LinearOpMode {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
-        // Initialize the hardware variables. Note that the strings used here as parameters
-        // to 'get' must correspond to the names assigned during the robot configuration
-        // step (using the FTC Robot Controller app on the phone).
-
         motorFrontLeft  = hardwareMap.get(DcMotor.class, "right_drive");
         motorFrontRight = hardwareMap.get(DcMotor.class, "left_drive");
         motorBackLeft = hardwareMap.get(DcMotor.class, "left_omni");
@@ -96,8 +78,7 @@ public class Ivysaur extends LinearOpMode {
         jewelServo = hardwareMap.get(Servo.class, "jewel_servo");
         jewelSensor = hardwareMap.get(ColorSensor.class, "jewel_sensor");
         jewelSensor.enableLed(true);
-        // Most robots need the motor on one side to be reversed to drive forward
-        // Reverse the motor that runs backwards when connected directly to the battery
+
         motorFrontLeft.setDirection(DcMotor.Direction.FORWARD);
         motorFrontRight.setDirection(DcMotor.Direction.REVERSE);
 
@@ -109,7 +90,6 @@ public class Ivysaur extends LinearOpMode {
 
 
 
-        // Wait for the game to start (driver presses PLAY)
         waitForStart();
         runtime.reset();
         motorFrontLeft.setPower(-.35);
@@ -122,7 +102,7 @@ public class Ivysaur extends LinearOpMode {
         motorBackLeft.setPower(0);
         motorFrontRight.setPower(0);
         motorBackRight.setPower(0);
-/**
+/*
         leftOmni.setPower(-.35);
         motorFrontRight.setPower(-.35);
         rightOmni.setPower(-.35);
