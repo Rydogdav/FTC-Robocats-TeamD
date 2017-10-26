@@ -56,8 +56,16 @@ public class Ivysaur extends LinearOpMode {
     public DcMotor rightOmni = null;
     public Servo jewelServo = null;
     public ColorSensor jewelSensor = null;
-    public double  servoDegrees;
-    public double servoEquation = 1/255 * servoDegrees;
+    public double servoDegrees;
+    public double servoEquation = 1 / 255 * servoDegrees;
+
+    static final double COUNTS_PER_MOTOR_REV = 1120;    // eg: TETRIX Motor Encoder
+    static final double DRIVE_GEAR_REDUCTION = 1.0;     // This is < 1.0 if geared UP
+    static final double WHEEL_DIAMETER_MILLIMETERS = 49.0;     // For figuring circumference
+    static final double COUNTS_PER_MILLIMETERS = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
+            (WHEEL_DIAMETER_MILLIMETERS * 3.1415);
+    static final double DRIVE_SPEED = 0.6;
+    static final double TURN_SPEED = 0.5;
 
 
     @Override
@@ -65,12 +73,12 @@ public class Ivysaur extends LinearOpMode {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
-        motorFrontLeft  = hardwareMap.get(DcMotor.class, "right_drive");
+        motorFrontLeft = hardwareMap.get(DcMotor.class, "right_drive");
         motorFrontRight = hardwareMap.get(DcMotor.class, "left_drive");
         motorBackLeft = hardwareMap.get(DcMotor.class, "left_omni");
         motorBackRight = hardwareMap.get(DcMotor.class, "right_omni");
 
-        motorFrontLeft  = hardwareMap.get(DcMotor.class, "left_drive");
+        motorFrontLeft = hardwareMap.get(DcMotor.class, "left_drive");
         motorFrontRight = hardwareMap.get(DcMotor.class, "right_drive");
         leftOmni = hardwareMap.get(DcMotor.class, "left_omni");
         rightOmni = hardwareMap.get(DcMotor.class, "right_omni");
@@ -89,78 +97,63 @@ public class Ivysaur extends LinearOpMode {
         rightOmni.setDirection(DcMotor.Direction.REVERSE);
 
 
-
         waitForStart();
         runtime.reset();
-        motorFrontLeft.setPower(-.35);
+        encoderDrive(-.65, -286, -286, 5);
+        
+    }
 
-        motorBackLeft.setPower(-.35);
-        motorFrontRight.setPower(-.35);
-        motorBackRight.setPower(-.35);
-        sleep(1500);                             // This was changed from 2000. then 500
-        motorFrontLeft.setPower(0);
-        motorBackLeft.setPower(0);
-        motorFrontRight.setPower(0);
-        motorBackRight.setPower(0);
-/*
-        leftOmni.setPower(-.35);
-        motorFrontRight.setPower(-.35);
-        rightOmni.setPower(-.35);
-        sleep(2000);
-        motorFrontLeft.setPower(0);
-        leftOmni.setPower(0);
-        rightOmni.setPower(0);
+    public void encoderDrive(double speed,
+                             double leftMillimeters, double rightMillimeters,
+                             double timeoutS) {
+        int newLeftTarget;
+        int newRightTarget;
+        // Ensure that the opmode is still active
+        if (opModeIsActive()) {
 
-        motorFrontRight.setPower(0);
-        jewelServo.setPosition(165);
-        if (jewelSensor.blue(true) > jewelSensor.red(false)) {
-            motorFrontRight.setPower(.35);
+            // Determine new target position, and pass to motor controller
+            newLeftTarget = motorFrontLeft.getCurrentPosition() + (int) (leftMillimeters * COUNTS_PER_MILLIMETERS);
+            newRightTarget = motorFrontRight.getCurrentPosition() + (int) (rightMillimeters * COUNTS_PER_MILLIMETERS);
+            motorFrontLeft.setTargetPosition(newLeftTarget);
+            motorFrontRight.setTargetPosition(newRightTarget);
 
-            motorBackRight.setPower(.35);
-            motorFrontLeft.setPower(-.35);
-            motorBackLeft.setPower(-.35);
-            sleep(1000);
+            // Turn On RUN_TO_POSITION
+            motorFrontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            motorFrontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+            // reset the timeout time and start motion.
+            runtime.reset();
+            motorFrontLeft.setPower(Math.abs(speed));
+            motorFrontRight.setPower(Math.abs(speed));
+
+            // keep looping while we are still active, and there is time left, and both motors are running.
+            // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
+            // its target position, the motion will stop.  This is "safer" in the event that the robot will
+            // always end the motion as soon as possible.
+            // However, if you require that BOTH motors have finished their moves before the robot continues
+            // onto the next step, use (isBusy() || isBusy()) in the loop test.
+            while (opModeIsActive() &&
+                    (runtime.seconds() < timeoutS) &&
+                    (motorFrontLeft.isBusy() && motorFrontRight.isBusy())) {
+
+                // Display it for the driver.
+                telemetry.addData("Path1", "Running to %7d :%7d", newLeftTarget, newRightTarget);
+                telemetry.addData("Path2", "Running at %7d :%7d",
+                        motorFrontLeft.getCurrentPosition(),
+                        motorFrontRight.getCurrentPosition());
+                telemetry.update();
+            }
+
+            // Stop all motion;
             motorFrontLeft.setPower(0);
-            motorBackLeft.setPower(0);
-            motorBackRight.setPower(0);
-
-            rightOmni.setPower(.35);
-            motorFrontLeft.setPower(-.35);
-            leftOmni.setPower(-.35);
-            sleep(1000);
-            motorFrontLeft.setPower(0);
-            leftOmni.setPower(0);
-            rightOmni.setPower(0);
-
             motorFrontRight.setPower(0);
-        }
-        if (jewelSensor.blue(false) < jewelSensor.red(true)) {
-            motorFrontRight.setPower(-.35);
 
-            motorBackRight.setPower(-.35);
-            motorFrontLeft.setPower(.35);
-            motorBackLeft.setPower(.35);
-            sleep(1000);
-            motorFrontLeft.setPower(0);
-            motorBackLeft.setPower(0);
-            motorBackRight.setPower(0);
+            // Turn off RUN_TO_POSITION
+            motorFrontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            motorFrontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-            rightOmni.setPower(-.35);
-            motorFrontLeft.setPower(.35);
-            leftOmni.setPower(.35);
-            sleep(1000);
-            motorFrontLeft.setPower(0);
-            leftOmni.setPower(0);
-            rightOmni.setPower(0);
-
-            motorFrontRight.setPower(0);
-        } */
-
-
-
-
-
-
+            //  sleep(250);   // optional pause after each move
         }
     }
+}
 
