@@ -62,7 +62,8 @@ public class Bulbasaur extends LinearOpMode {
     public DcMotor motorFrontRight = null;
     public DcMotor motorBackLeft = null;
     public DcMotor motorBackRight = null;
-    public DcMotor motorFrontIntake = null;
+    public DcMotor motorLeftIntake = null;
+    public DcMotor motorRightIntake = null;
     public DcMotor motorFrontLift = null;
 
     public double servoDegrees;
@@ -78,14 +79,16 @@ public class Bulbasaur extends LinearOpMode {
         motorFrontRight = hardwareMap.get(DcMotor.class, "left_drive");
         motorBackLeft = hardwareMap.get(DcMotor.class, "left_omni");
         motorBackRight = hardwareMap.get(DcMotor.class, "right_omni");
-        motorFrontIntake = hardwareMap.get(DcMotor.class, "front_intake");
+        motorLeftIntake = hardwareMap.get(DcMotor.class, "left_intake");
+        motorRightIntake = hardwareMap.get(DcMotor.class, "right_intake");
         motorFrontLift = hardwareMap.get(DcMotor.class, "front_lift");
 
         motorFrontLeft.setDirection(DcMotor.Direction.FORWARD);
         motorFrontRight.setDirection(DcMotor.Direction.REVERSE);
         motorBackLeft.setDirection(DcMotor.Direction.FORWARD);
         motorBackRight.setDirection(DcMotor.Direction.REVERSE);
-        motorFrontIntake.setDirection(DcMotor.Direction.FORWARD);
+        motorLeftIntake.setDirection(DcMotor.Direction.FORWARD);
+        motorRightIntake.setDirection(DcMotor.Direction.REVERSE);
         motorFrontLift.setDirection(DcMotor.Direction.FORWARD);
 
 
@@ -121,7 +124,8 @@ public class Bulbasaur extends LinearOpMode {
             motorFrontRight.setPower(rightPower);
             motorBackRight.setPower(rightPower);
             motorFrontLift.setPower(liftPower);
-            motorFrontIntake.setPower(intakePower);
+            motorLeftIntake.setPower(intakePower);
+            motorRightIntake.setPower(intakePower);
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());

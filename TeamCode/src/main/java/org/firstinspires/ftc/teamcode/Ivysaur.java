@@ -49,18 +49,15 @@ public class Ivysaur extends LinearOpMode {
     public DcMotor motorFrontLeft = null;
     public DcMotor motorFrontRight = null;
 
-    public DcMotor motorBackLeft = null;
+    public DcMotor  motorBackLeft = null;
     public DcMotor motorBackRight = null;
-
-    public DcMotor leftOmni = null;
-    public DcMotor rightOmni = null;
     public Servo jewelServo = null;
     public ColorSensor jewelSensor = null;
     public double servoDegrees;
     public double servoEquation = 1 / 255 * servoDegrees;
 
     static final double COUNTS_PER_MOTOR_REV = 1120;    // eg: TETRIX Motor Encoder
-    static final double DRIVE_GEAR_REDUCTION = 1.0;     // This is < 1.0 if geared UP
+    static final double DRIVE_GEAR_REDUCTION = 40.0;     // This is < 1.0 if geared UP
     static final double WHEEL_DIAMETER_MILLIMETERS = 49.0;     // For figuring circumference
     static final double COUNTS_PER_MILLIMETERS = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
             (WHEEL_DIAMETER_MILLIMETERS * 3.1415);
@@ -80,8 +77,8 @@ public class Ivysaur extends LinearOpMode {
 
         motorFrontLeft = hardwareMap.get(DcMotor.class, "left_drive");
         motorFrontRight = hardwareMap.get(DcMotor.class, "right_drive");
-        leftOmni = hardwareMap.get(DcMotor.class, "left_omni");
-        rightOmni = hardwareMap.get(DcMotor.class, "right_omni");
+        motorBackLeft = hardwareMap.get(DcMotor.class, "left_omni");
+        motorBackRight = hardwareMap.get(DcMotor.class, "right_omni");
 
         jewelServo = hardwareMap.get(Servo.class, "jewel_servo");
         jewelSensor = hardwareMap.get(ColorSensor.class, "jewel_sensor");
@@ -93,8 +90,8 @@ public class Ivysaur extends LinearOpMode {
         motorBackLeft.setDirection(DcMotor.Direction.FORWARD);
         motorBackRight.setDirection(DcMotor.Direction.REVERSE);
 
-        leftOmni.setDirection(DcMotor.Direction.FORWARD);
-        rightOmni.setDirection(DcMotor.Direction.REVERSE);
+         motorBackLeft.setDirection(DcMotor.Direction.FORWARD);
+        motorBackRight.setDirection(DcMotor.Direction.REVERSE);
 
 
         waitForStart();
