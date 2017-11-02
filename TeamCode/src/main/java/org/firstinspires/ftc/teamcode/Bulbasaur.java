@@ -65,6 +65,7 @@ public class Bulbasaur extends LinearOpMode {
     public DcMotor motorLeftIntake = null;
     public DcMotor motorRightIntake = null;
     public DcMotor motorFrontLift = null;
+    public Servo servoBackJewel = null;
 
     public double servoDegrees;
     public double servoEquation = 1/255 * servoDegrees;
@@ -75,13 +76,14 @@ public class Bulbasaur extends LinearOpMode {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
-        motorFrontLeft  = hardwareMap.get(DcMotor.class, "right_drive");
-        motorFrontRight = hardwareMap.get(DcMotor.class, "left_drive");
+        motorFrontLeft  = hardwareMap.get(DcMotor.class, "left_drive");
+        motorFrontRight = hardwareMap.get(DcMotor.class, "right_drive");
         motorBackLeft = hardwareMap.get(DcMotor.class, "left_omni");
         motorBackRight = hardwareMap.get(DcMotor.class, "right_omni");
         motorLeftIntake = hardwareMap.get(DcMotor.class, "left_intake");
         motorRightIntake = hardwareMap.get(DcMotor.class, "right_intake");
         motorFrontLift = hardwareMap.get(DcMotor.class, "front_lift");
+        servoBackJewel = hardwareMap.get(Servo.class, "jewel_servo");
 
         motorFrontLeft.setDirection(DcMotor.Direction.FORWARD);
         motorFrontRight.setDirection(DcMotor.Direction.REVERSE);
@@ -90,6 +92,8 @@ public class Bulbasaur extends LinearOpMode {
         motorLeftIntake.setDirection(DcMotor.Direction.FORWARD);
         motorRightIntake.setDirection(DcMotor.Direction.REVERSE);
         motorFrontLift.setDirection(DcMotor.Direction.FORWARD);
+
+        servoBackJewel.setPosition(155);
 
 
         waitForStart();

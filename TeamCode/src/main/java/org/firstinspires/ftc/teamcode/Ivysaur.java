@@ -51,8 +51,8 @@ public class Ivysaur extends LinearOpMode {
 
     public DcMotor  motorBackLeft = null;
     public DcMotor motorBackRight = null;
-    public Servo jewelServo = null;
-    public ColorSensor jewelSensor = null;
+    public Servo servoBackJewel = null;
+    public ColorSensor sensorBackJewel = null;
     public double servoDegrees;
     public double servoEquation = 1 / 255 * servoDegrees;
 
@@ -75,28 +75,22 @@ public class Ivysaur extends LinearOpMode {
         motorBackLeft = hardwareMap.get(DcMotor.class, "left_omni");
         motorBackRight = hardwareMap.get(DcMotor.class, "right_omni");
 
-        motorFrontLeft = hardwareMap.get(DcMotor.class, "left_drive");
-        motorFrontRight = hardwareMap.get(DcMotor.class, "right_drive");
-        motorBackLeft = hardwareMap.get(DcMotor.class, "left_omni");
-        motorBackRight = hardwareMap.get(DcMotor.class, "right_omni");
-
-        jewelServo = hardwareMap.get(Servo.class, "jewel_servo");
-        jewelSensor = hardwareMap.get(ColorSensor.class, "jewel_sensor");
-        jewelSensor.enableLed(true);
+        servoBackJewel = hardwareMap.get(Servo.class, "jewel_servo");
+        sensorBackJewel = hardwareMap.get(ColorSensor.class, "jewel_sensor");
+        sensorBackJewel.enableLed(true);
 
         motorFrontLeft.setDirection(DcMotor.Direction.FORWARD);
         motorFrontRight.setDirection(DcMotor.Direction.REVERSE);
-
         motorBackLeft.setDirection(DcMotor.Direction.FORWARD);
         motorBackRight.setDirection(DcMotor.Direction.REVERSE);
 
-         motorBackLeft.setDirection(DcMotor.Direction.FORWARD);
-        motorBackRight.setDirection(DcMotor.Direction.REVERSE);
-
+        servoBackJewel.setPosition(150);
 
         waitForStart();
         runtime.reset();
         encoderDrive(-.65, -286, -286, 5);
+
+        servoBackJewel.setPosition(5);
         
     }
 
