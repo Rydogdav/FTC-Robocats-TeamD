@@ -66,6 +66,7 @@ public class Bulbasaur extends LinearOpMode {
     public DcMotor motorRightIntake = null;
     public DcMotor motorFrontLift = null;
     public Servo servoBackJewel = null;
+    public ColorSensor sensorBackJewel = null;
 
     public double servoDegrees;
     public double servoEquation = 1/255 * servoDegrees;
@@ -84,6 +85,7 @@ public class Bulbasaur extends LinearOpMode {
         motorRightIntake = hardwareMap.get(DcMotor.class, "right_intake");
         motorFrontLift = hardwareMap.get(DcMotor.class, "front_lift");
         servoBackJewel = hardwareMap.get(Servo.class, "jewel_servo");
+        sensorBackJewel = hardwareMap.get(ColorSensor.class, "jewel_sensor");
 
         motorFrontLeft.setDirection(DcMotor.Direction.FORWARD);
         motorFrontRight.setDirection(DcMotor.Direction.REVERSE);
@@ -93,7 +95,7 @@ public class Bulbasaur extends LinearOpMode {
         motorRightIntake.setDirection(DcMotor.Direction.REVERSE);
         motorFrontLift.setDirection(DcMotor.Direction.FORWARD);
 
-        servoBackJewel.setPosition(155);
+        servoBackJewel.setPosition(130);
 
 
         waitForStart();

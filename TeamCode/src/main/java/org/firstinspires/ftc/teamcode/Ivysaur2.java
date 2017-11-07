@@ -80,8 +80,8 @@ public class Ivysaur2 extends LinearOpMode {
     public DcMotor motorFrontRight = null;
     public DcMotor motorBackLeft = null;
     public DcMotor motorBackRight = null;
-    public Servo jewelServo = null;
-    public ColorSensor jewelSensor = null;
+    public Servo servoBackJewel = null;
+    public ColorSensor sensorBackJewel = null;
     public double  servoDegrees;
     public double servoEquation = 1/255 * servoDegrees;
 
@@ -110,9 +110,9 @@ public class Ivysaur2 extends LinearOpMode {
         motorFrontRight = hardwareMap.get(DcMotor.class, "left_drive");
         motorBackLeft = hardwareMap.get(DcMotor.class, "left_omni");
         motorBackRight = hardwareMap.get(DcMotor.class, "right_omni");
-        jewelServo = hardwareMap.get(Servo.class, "jewel_servo");
-        jewelSensor = hardwareMap.get(ColorSensor.class, "jewel_sensor");
-        jewelSensor.enableLed(true);
+        servoBackJewel = hardwareMap.get(Servo.class, "jewel_servo");
+        sensorBackJewel = hardwareMap.get(ColorSensor.class, "jewel_sensor");
+        sensorBackJewel.enableLed(true);
 
        motorFrontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motorFrontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
