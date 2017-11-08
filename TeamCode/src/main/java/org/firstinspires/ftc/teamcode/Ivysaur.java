@@ -64,6 +64,23 @@ public class Ivysaur extends LinearOpMode {
     static final double DRIVE_SPEED = 0.6;
     static final double TURN_SPEED = 0.5;
 
+    static final double sensordown = 150;
+    static final double sensorup = 5;
+    static final int colorblue = -1;
+    static final int colorred = 1;
+    static final int ballred = colorred;
+    static final int ballblue = colorblue;
+    static final double jewelknockdistance = 70;
+    static final int clockwise = 1;
+    static final int anticlockwise = -1;
+    static final int glyphside = 1;
+    static final int relicside = -1;
+
+
+    static final int startside = glyphside;
+    static final int teamcolor = colorblue;
+
+
 
     @Override
     public void runOpMode() {
@@ -84,14 +101,65 @@ public class Ivysaur extends LinearOpMode {
         motorBackLeft.setDirection(DcMotor.Direction.FORWARD);
         motorBackRight.setDirection(DcMotor.Direction.REVERSE);
 
-        servoBackJewel.setPosition(150);
+        moveSensor(sensorup);
 
         waitForStart();
         runtime.reset();
-        encoderDrive(-.65, -286, -286, 5);
+        doAutonomous();
 
-        servoBackJewel.setPosition(5);
         
+    }
+
+    public void doAutonomous(){
+        int ballcolor;
+        int rotation;
+        moveSensor(sensordown);
+        ballcolor=detectcolor();
+        knockjeweloff(ballcolor);
+        moveSensor(sensorup);
+        if ((teamcolor == colorblue) && (startside == glyphside))
+            rotation = clockwise;
+        else if ((teamcolor == colorblue) && (startside == relicside))
+            rotation = anticlockwise;
+        else if ((teamcolor == colorred) && (startside == glyphside))
+            rotation = anticlockwise;
+        else if ((teamcolor == colorred) && (startside == relicside))
+            rotation = clockwise;
+        parkInZone(-teamcolor, rotation);
+    }
+    public void moveSensor(double position){
+        servoBackJewel.setPosition(position);
+
+    }
+    public int detectcolor(){
+        return ballred;
+    }
+
+    public void knockjeweloff(int ballcolor){
+        if (ballcolor == teamcolor) {
+            driveStraight(.4, -jewelknockdistance, 6);
+        }
+        else {
+            driveStraight(.4, jewelknockdistance, 6);
+        }
+    }
+
+    public void parkInZone(int direction, int rotation) {
+
+        driveStraight(.4, 300*direction, 6);
+        turnRobot(rotation, 45);
+        driveStraight(.4, 50*direction, 6);
+    }
+    public void turnRobot(int rotationDirection, int angle){
+        double distance;
+        distance=angle*235/90;
+        encoderDrive(.4, rotationDirection*distance, -rotationDirection*distance, 6);
+
+    }
+
+    public void driveStraight(double speed, double distanceinmilimeters, double timeoutS){
+
+        encoderDrive(speed, distanceinmilimeters, distanceinmilimeters, timeoutS);
     }
 
     public void encoderDrive(double speed,
