@@ -71,10 +71,14 @@ public class Ivysaur extends LinearOpMode {
     static final int ballred = colorred;
     static final int ballblue = colorblue;
     static final double jewelknockdistance = 70;
+    static final double zonedistance = 300;
+    static final double finalpushdist = 50;
     static final int clockwise = 1;
     static final int anticlockwise = -1;
     static final int glyphside = 1;
     static final int relicside = -1;
+    int ballcolor = colorred;
+
 
 
     static final int startside = glyphside;
@@ -92,8 +96,8 @@ public class Ivysaur extends LinearOpMode {
         motorBackLeft = hardwareMap.get(DcMotor.class, "left_omni");
         motorBackRight = hardwareMap.get(DcMotor.class, "right_omni");
 
-        servoBackJewel = hardwareMap.get(Servo.class, "jewel_servo");
-        sensorBackJewel = hardwareMap.get(ColorSensor.class, "jewel_sensor");
+        //servoBackJewel = hardwareMap.get(Servo.class, "jewel_servo");
+        //sensorBackJewel = hardwareMap.get(ColorSensor.class, "jewel_sensor");
         sensorBackJewel.enableLed(true);
 
         motorFrontLeft.setDirection(DcMotor.Direction.FORWARD);
@@ -111,12 +115,14 @@ public class Ivysaur extends LinearOpMode {
     }
 
     public void doAutonomous(){
-        int ballcolor;
         int rotation;
         moveSensor(sensordown);
-        ballcolor=detectcolor();
-        knockjeweloff(ballcolor);
+        sleep(500);
+        detectcolor();
+        knockjeweloff();
+        sleep(500);
         moveSensor(sensorup);
+        sleep(500);
         if ((teamcolor == colorblue) && (startside == glyphside))
             rotation = clockwise;
         else if ((teamcolor == colorblue) && (startside == relicside))
@@ -127,16 +133,16 @@ public class Ivysaur extends LinearOpMode {
             rotation = clockwise;
         parkInZone(-teamcolor, rotation);
     }
-    public void moveSensor(double position){
+    public void moveSensor(double position){ //sensor moves
         servoBackJewel.setPosition(position);
 
     }
-    public int detectcolor(){
-        return ballred;
-    }
+    public void detectcolor(){
+        ballcolor = ballred;
+    } //detect ball color
 
-    public void knockjeweloff(int ballcolor){
-        if (ballcolor == teamcolor) {
+    public void knockjeweloff(){
+        if (ballcolor != teamcolor) {
             driveStraight(.4, -jewelknockdistance, 6);
         }
         else {
@@ -145,10 +151,14 @@ public class Ivysaur extends LinearOpMode {
     }
 
     public void parkInZone(int direction, int rotation) {
-
-        driveStraight(.4, 300*direction, 6);
+        double correctiondistance;
+        if (ballcolor != teamcolor)
+            correctiondistance = jewelknockdistance;
+        else
+            correctiondistance = -jewelknockdistance;
+        driveStraight(.4, (zonedistance + correctiondistance)*direction, 6);
         turnRobot(rotation, 45);
-        driveStraight(.4, 50*direction, 6);
+        driveStraight(.4, finalpushdist*direction, 6);
     }
     public void turnRobot(int rotationDirection, int angle){
         double distance;
