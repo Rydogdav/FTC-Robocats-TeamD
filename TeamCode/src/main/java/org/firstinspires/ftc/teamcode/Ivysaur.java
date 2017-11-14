@@ -52,7 +52,8 @@ public class Ivysaur extends LinearOpMode {
     public DcMotor  motorBackLeft = null;
     public DcMotor motorBackRight = null;
     public Servo servoBackJewel = null;
-    public ColorSensor sensorBackJewel = null;
+    //public ColorSensor sensorBackJewel = null;
+    public ColorSensor colorSensor = null;
     public double servoDegrees;
     public double servoEquation = 1 / 255 * servoDegrees;
 
@@ -96,33 +97,54 @@ public class Ivysaur extends LinearOpMode {
         motorBackLeft = hardwareMap.get(DcMotor.class, "left_omni");
         motorBackRight = hardwareMap.get(DcMotor.class, "right_omni");
 
-        //servoBackJewel = hardwareMap.get(Servo.class, "jewel_servo");
+        servoBackJewel = hardwareMap.get(Servo.class, "jewel_servo");
         //sensorBackJewel = hardwareMap.get(ColorSensor.class, "jewel_sensor");
-        sensorBackJewel.enableLed(true);
+        colorSensor = hardwareMap.get(ColorSensor.class, "colorSensor");
+        colorSensor.enableLed(true);
 
         motorFrontLeft.setDirection(DcMotor.Direction.FORWARD);
         motorFrontRight.setDirection(DcMotor.Direction.REVERSE);
         motorBackLeft.setDirection(DcMotor.Direction.FORWARD);
         motorBackRight.setDirection(DcMotor.Direction.REVERSE);
 
-        moveSensor(sensorup);
+        colorSensor = hardwareMap.get(ColorSensor.class, "colorSensor");
 
+        moveSensor(sensorup);
+        telemetry.addLine("Waiting for start");
+        telemetry.update();
         waitForStart();
         runtime.reset();
+        telemetry.addLine("Starting auto");
+        telemetry.update();
         doAutonomous();
+        telemetry.addLine("Done auto");
+        telemetry.update();
 
         
     }
 
     public void doAutonomous(){
         int rotation;
+        telemetry.addLine("Sensor down");
+        telemetry.update();
+
         moveSensor(sensordown);
-        sleep(500);
+        sleep(2000);
+
+        telemetry.addLine("Detecting color");
+        telemetry.update();
         detectcolor();
+
+        telemetry.addLine("Knocking jewel");
+        telemetry.update();
         knockjeweloff();
-        sleep(500);
+        sleep(2000);
+
+        telemetry.addLine("Sensor up");
+        telemetry.update();
         moveSensor(sensorup);
-        sleep(500);
+        sleep(2000);
+
         if ((teamcolor == colorblue) && (startside == glyphside))
             rotation = clockwise;
         else if ((teamcolor == colorblue) && (startside == relicside))
@@ -134,12 +156,18 @@ public class Ivysaur extends LinearOpMode {
         parkInZone(-teamcolor, rotation);
     }
     public void moveSensor(double position){ //sensor moves
-        servoBackJewel.setPosition(position);
+        servoBackJewel.setPosition(position /256);
 
     }
-    public void detectcolor(){
-        ballcolor = ballred;
-    } //detect ball color
+    public void detectcolor() {
+
+        //detect ball color
+         if (colorSensor.blue() > colorSensor.red())
+             ballcolor = ballblue;
+         else
+             ballcolor = ballred;
+
+    }
 
     public void knockjeweloff(){
         if (ballcolor != teamcolor) {
@@ -206,11 +234,11 @@ public class Ivysaur extends LinearOpMode {
                     (motorFrontLeft.isBusy() && motorFrontRight.isBusy())) {
 
                 // Display it for the driver.
-                telemetry.addData("Path1", "Running to %7d :%7d", newLeftTarget, newRightTarget);
-                telemetry.addData("Path2", "Running at %7d :%7d",
-                        motorFrontLeft.getCurrentPosition(),
-                        motorFrontRight.getCurrentPosition());
-                telemetry.update();
+//                telemetry.addData("Path1", "Running to %7d :%7d", newLeftTarget, newRightTarget);
+//                telemetry.addData("Path2", "Running at %7d :%7d",
+//                        motorFrontLeft.getCurrentPosition(),
+//                        motorFrontRight.getCurrentPosition());
+//                telemetry.update();
             }
 
             // Stop all motion;
