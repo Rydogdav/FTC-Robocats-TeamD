@@ -41,7 +41,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
 
-@Autonomous(name="autonomous red", group="Linear Opmode")
+@Autonomous(name="autonomous red1", group="Linear Opmode")
 
 public class Ivysaur extends LinearOpMode {
 
@@ -99,15 +99,13 @@ public class Ivysaur extends LinearOpMode {
 
         servoBackJewel = hardwareMap.get(Servo.class, "jewel_servo");
         //sensorBackJewel = hardwareMap.get(ColorSensor.class, "jewel_sensor");
-        colorSensor = hardwareMap.get(ColorSensor.class, "colorSensor");
+        colorSensor = hardwareMap.get(ColorSensor.class, "jewel_sensor");
         colorSensor.enableLed(true);
 
         motorFrontLeft.setDirection(DcMotor.Direction.FORWARD);
         motorFrontRight.setDirection(DcMotor.Direction.REVERSE);
         motorBackLeft.setDirection(DcMotor.Direction.FORWARD);
         motorBackRight.setDirection(DcMotor.Direction.REVERSE);
-
-        colorSensor = hardwareMap.get(ColorSensor.class, "colorSensor");
 
         moveSensor(sensorup);
         telemetry.addLine("Waiting for start");
