@@ -82,8 +82,9 @@ public class Ivysaur extends LinearOpMode {
 
 
 
-    static final int startside = glyphside;
-    static final int teamcolor = colorblue;
+    static int startside = glyphside;
+    static int teamcolor = colorblue;
+    static boolean confirm = false;
 
 
 
@@ -108,8 +109,15 @@ public class Ivysaur extends LinearOpMode {
         motorBackRight.setDirection(DcMotor.Direction.REVERSE);
 
         moveSensor(sensorup);
+<<<<<<< HEAD
         telemetry.addLine("Waiting for start");
         telemetry.update();
+=======
+
+        //----------Some Ryan Code----------
+        setParam();
+
+>>>>>>> 99b98a4d0530ec1afcb42cfd9a6d6be4304b0521
         waitForStart();
         runtime.reset();
         telemetry.addLine("Starting auto");
@@ -119,6 +127,32 @@ public class Ivysaur extends LinearOpMode {
         telemetry.update();
 
         
+    }
+    public void setParam () {
+        while(!confirm && opModeIsActive()){
+            telemetry.addData("Team Color", teamcolor);
+            telemetry.addData("Robot Placement", startside);
+            telemetry.addLine("Press A for Red Alliance, B for Blue Alliance.");
+            telemetry.addLine("Press X for Glyph Side placement, Y for Relic Side.");
+            telemetry.addLine("Press both bumpers to confirm.");
+            //Not set in stone, just conceptual
+            telemetry.update();
+            if (gamepad1.a) {
+                teamcolor = colorred;
+            }
+            if (gamepad1.b) {
+                teamcolor = colorblue;
+            }
+            if (gamepad1.x) {
+                startside = glyphside;
+            }
+            if (gamepad1.y) {
+                startside = relicside;
+            }
+            if (gamepad1.right_bumper && gamepad1.left_bumper){
+                confirm = true;
+            }
+        }
     }
 
     public void doAutonomous(){
