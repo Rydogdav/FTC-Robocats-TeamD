@@ -65,8 +65,8 @@ public class Ivysaur extends LinearOpMode {
     static final double DRIVE_SPEED = 0.6;
     static final double TURN_SPEED = 0.5;
 
-    static final double sensordown = 150;
-    static final double sensorup = 5;
+    static final double sensordown = 20;
+    static final double sensorup = 200;
     static final int colorblue = -1;
     static final int colorred = 1;
     static final int ballred = colorred;
@@ -109,15 +109,12 @@ public class Ivysaur extends LinearOpMode {
         motorBackRight.setDirection(DcMotor.Direction.REVERSE);
 
         moveSensor(sensorup);
-<<<<<<< HEAD
         telemetry.addLine("Waiting for start");
         telemetry.update();
-=======
 
         //----------Some Ryan Code----------
         setParam();
 
->>>>>>> 99b98a4d0530ec1afcb42cfd9a6d6be4304b0521
         waitForStart();
         runtime.reset();
         telemetry.addLine("Starting auto");
@@ -155,8 +152,7 @@ public class Ivysaur extends LinearOpMode {
         }
     }
 
-    public void doAutonomous(){
-        int rotation;
+    public void doAutonomous(){int rotation = 0;
         telemetry.addLine("Sensor down");
         telemetry.update();
 
@@ -177,7 +173,7 @@ public class Ivysaur extends LinearOpMode {
         moveSensor(sensorup);
         sleep(2000);
 
-        if ((teamcolor == colorblue) && (startside == glyphside))
+      /*  if ((teamcolor == colorblue) && (startside == glyphside))
             rotation = clockwise;
         else if ((teamcolor == colorblue) && (startside == relicside))
             rotation = anticlockwise;
@@ -185,7 +181,7 @@ public class Ivysaur extends LinearOpMode {
             rotation = anticlockwise;
         else if ((teamcolor == colorred) && (startside == relicside))
             rotation = clockwise;
-        parkInZone(-teamcolor, rotation);
+        parkInZone(-teamcolor, rotation);*/
     }
     public void moveSensor(double position){ //sensor moves
         servoBackJewel.setPosition(position /256);
