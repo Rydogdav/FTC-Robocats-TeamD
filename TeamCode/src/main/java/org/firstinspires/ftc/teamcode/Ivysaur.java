@@ -40,6 +40,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+
 
 @Autonomous(name="autonomous red1", group="Linear Opmode")
 
@@ -57,16 +59,16 @@ public class Ivysaur extends LinearOpMode {
     public double servoDegrees;
     public double servoEquation = 1 / 255 * servoDegrees;
 
-    static final double COUNTS_PER_MOTOR_REV = 1120;    // eg: TETRIX Motor Encoder
+    static final double COUNTS_PER_MOTOR_REV = 4;    // eg: TETRIX Motor Encoder
     static final double DRIVE_GEAR_REDUCTION = 40.0;     // This is < 1.0 if geared UP
-    static final double WHEEL_DIAMETER_MILLIMETERS = 49.0;     // For figuring circumference
+    static final double WHEEL_DIAMETER_MILLIMETERS = 94.0;     // For figuring circumference
     static final double COUNTS_PER_MILLIMETERS = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
             (WHEEL_DIAMETER_MILLIMETERS * 3.1415);
     static final double DRIVE_SPEED = 0.6;
     static final double TURN_SPEED = 0.5;
 
-    static final double sensordown = 20;
-    static final double sensorup = 200;
+    static final double sensordown = 50;
+    static final double sensorup = 220;
     static final int colorblue = -1;
     static final int colorred = 1;
     static final int ballred = colorred;
@@ -173,7 +175,7 @@ public class Ivysaur extends LinearOpMode {
         moveSensor(sensorup);
         sleep(2000);
 
-      /*  if ((teamcolor == colorblue) && (startside == glyphside))
+        /*if ((teamcolor == colorblue) && (startside == glyphside))
             rotation = clockwise;
         else if ((teamcolor == colorblue) && (startside == relicside))
             rotation = anticlockwise;
@@ -190,28 +192,40 @@ public class Ivysaur extends LinearOpMode {
     public void detectcolor() {
 
         //detect ball color
-         if (colorSensor.blue() > colorSensor.red())
-             ballcolor = ballblue;
-         else
-             ballcolor = ballred;
-
+         if (colorSensor.blue() > colorSensor.red()){
+            ballcolor = ballblue;
+            telemetry.addLine("Ball Color Blue");
+            telemetry.update();
+        }
+         else if  (colorSensor.blue() < colorSensor.red()) {
+            ballcolor = ballred;
+            telemetry.addLine("Ball Color Red");
+            telemetry.update();
+        }
+        else{
+            ballcolor = 0;
+            telemetry.addLine("Ball Color N/A");
+            telemetry.update();
+        }
     }
 
     public void knockjeweloff(){
-        if (ballcolor != teamcolor) {
+        if (ballcolor == teamcolor) {
             driveStraight(.4, -jewelknockdistance, 6);
         }
-        else {
+        else if (ballcolor != 0){
             driveStraight(.4, jewelknockdistance, 6);
         }
     }
 
     public void parkInZone(int direction, int rotation) {
         double correctiondistance;
-        if (ballcolor != teamcolor)
+        if (ballcolor == teamcolor)
+            correctiondistance = -jewelknockdistance;
+        else if (ballcolor != 0)
             correctiondistance = jewelknockdistance;
         else
-            correctiondistance = -jewelknockdistance;
+            correctiondistance = 0;
         driveStraight(.4, (zonedistance + correctiondistance)*direction, 6);
         turnRobot(rotation, 45);
         driveStraight(.4, finalpushdist*direction, 6);
@@ -235,16 +249,20 @@ public class Ivysaur extends LinearOpMode {
         int newRightTarget;
         // Ensure that the opmode is still active
         if (opModeIsActive()) {
+            motorBackLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            motorBackRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
 
             // Determine new target position, and pass to motor controller
-            newLeftTarget = motorFrontLeft.getCurrentPosition() + (int) (leftMillimeters * COUNTS_PER_MILLIMETERS);
-            newRightTarget = motorFrontRight.getCurrentPosition() + (int) (rightMillimeters * COUNTS_PER_MILLIMETERS);
-            motorFrontLeft.setTargetPosition(newLeftTarget);
-            motorFrontRight.setTargetPosition(newRightTarget);
+//            newLeftTarget = motorFrontLeft.getCurrentPosition() + (int) (leftMillimeters * COUNTS_PER_MILLIMETERS);
+//            newRightTarget = motorFrontRight.getCurrentPosition() + (int) (rightMillimeters * COUNTS_PER_MILLIMETERS);
 
             // Turn On RUN_TO_POSITION
             motorFrontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             motorFrontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+            motorFrontLeft.setTargetPosition((int) (leftMillimeters * COUNTS_PER_MILLIMETERS));
+            motorFrontRight.setTargetPosition((int) (rightMillimeters * COUNTS_PER_MILLIMETERS));
 
             // reset the timeout time and start motion.
             runtime.reset();

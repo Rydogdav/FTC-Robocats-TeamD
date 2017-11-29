@@ -95,7 +95,7 @@ public class Bulbasaur extends LinearOpMode {
         motorRightIntake.setDirection(DcMotor.Direction.REVERSE);
         motorFrontLift.setDirection(DcMotor.Direction.FORWARD);
 
-        servoBackJewel.setPosition(130);
+        servoBackJewel.setPosition(220);
 
 
         waitForStart();
