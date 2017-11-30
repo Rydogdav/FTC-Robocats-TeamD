@@ -67,8 +67,8 @@ public class Ivysaur extends LinearOpMode {
     static final double DRIVE_SPEED = 0.6;
     static final double TURN_SPEED = 0.5;
 
-    static final double sensordown = 50;
-    static final double sensorup = 220;
+    static final double sensordown = 40;
+    static final double sensorup = 200;
     static final int colorblue = -1;
     static final int colorred = 1;
     static final int ballred = colorred;
@@ -169,13 +169,12 @@ public class Ivysaur extends LinearOpMode {
         telemetry.update();
         knockjeweloff();
         sleep(2000);
-
         telemetry.addLine("Sensor up");
         telemetry.update();
         moveSensor(sensorup);
         sleep(2000);
 
-        /*if ((teamcolor == colorblue) && (startside == glyphside))
+        if ((teamcolor == colorblue) && (startside == glyphside))
             rotation = clockwise;
         else if ((teamcolor == colorblue) && (startside == relicside))
             rotation = anticlockwise;
@@ -183,7 +182,7 @@ public class Ivysaur extends LinearOpMode {
             rotation = anticlockwise;
         else if ((teamcolor == colorred) && (startside == relicside))
             rotation = clockwise;
-        parkInZone(-teamcolor, rotation);*/
+        parkInZone(-teamcolor, rotation);
     }
     public void moveSensor(double position){ //sensor moves
         servoBackJewel.setPosition(position /256);
