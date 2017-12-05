@@ -95,9 +95,9 @@ public class Bulbasaur extends LinearOpMode {
         motorRightIntake.setDirection(DcMotor.Direction.REVERSE);
         motorFrontLift.setDirection(DcMotor.Direction.FORWARD);
 
-        servoBackJewel.setPosition(220);
+        servoBackJewel.setPosition(180);
 
-
+        double intakePower = 0;
         waitForStart();
         runtime.reset();
 
@@ -107,21 +107,38 @@ public class Bulbasaur extends LinearOpMode {
             double leftPower;
             double rightPower;
             double liftPower = 0;
-            double intakePower = 0;
+            double gearMult = 1;
 
 
-            leftPower  = -gamepad1.left_stick_y ;
-            rightPower = -gamepad1.right_stick_y ;
+            leftPower  = -gamepad1.left_stick_y * gearMult;
+            rightPower = -gamepad1.right_stick_y * gearMult;
+
+            if(gamepad1.right_bumper) gearMult = 1;
+
+            if(gamepad1.left_bumper) gearMult = 0.5;
 
             if (gamepad1.y) liftPower = 1;
-            if (!gamepad1.y && !gamepad1.a) liftPower = 0;
+            else if (gamepad1.a) liftPower = -1;
+            else liftPower = 0;
 
-            if (gamepad1.a) liftPower = -1;
+            if ((gamepad1.left_trigger > 0.8)){
+                telemetry.addLine("left trigger pressed");
+                intakePower = -.6;
+            }
+            else if ((gamepad1.left_trigger > .2) && (intakePower == -.6))
+                intakePower = 0;
 
-            if (gamepad1.left_trigger > 0.5)intakePower = 1;
-            if (gamepad1.left_trigger < 0.5 && gamepad1.right_trigger < 0.5)intakePower = 0;
-
-            if (gamepad1.right_trigger > 0.5)intakePower = -1;
+            //if (gamepad1.right_trigger > 0.5)intakePower = 1;
+            if (gamepad1.right_trigger > .8) {
+                telemetry.addLine("right trigger pressed");
+                if (intakePower == 0)
+                    intakePower = 1;
+                else if (intakePower == 1)
+                    intakePower = 0;
+                //sleep(500);
+               while (gamepad1.right_trigger > .2){
+                   idle();}
+            }
 
 
             // Send calculated power to wheels
@@ -134,9 +151,10 @@ public class Bulbasaur extends LinearOpMode {
             motorRightIntake.setPower(intakePower);
 
             // Show the elapsed game time and wheel power.
-            telemetry.addData("Status", "Run Time: " + runtime.toString());
-            telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
+            //telemetry.addData("Status", "Run Time: " + runtime.toString());
+            //telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
             telemetry.update();
+            idle();
         }
     }
 }
