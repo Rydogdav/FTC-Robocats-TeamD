@@ -87,57 +87,57 @@ public class Bulbasaur extends LinearOpMode {
         servoBackJewel = hardwareMap.get(Servo.class, "jewel_servo");
         sensorBackJewel = hardwareMap.get(ColorSensor.class, "jewel_sensor");
 
-        motorFrontLeft.setDirection(DcMotor.Direction.FORWARD);
-        motorFrontRight.setDirection(DcMotor.Direction.REVERSE);
-        motorBackLeft.setDirection(DcMotor.Direction.FORWARD);
-        motorBackRight.setDirection(DcMotor.Direction.REVERSE);
+        motorFrontLeft.setDirection(DcMotor.Direction.REVERSE);
+        motorFrontRight.setDirection(DcMotor.Direction.FORWARD);
+        motorBackLeft.setDirection(DcMotor.Direction.REVERSE);
+        motorBackRight.setDirection(DcMotor.Direction.FORWARD);
         motorLeftIntake.setDirection(DcMotor.Direction.FORWARD);
         motorRightIntake.setDirection(DcMotor.Direction.REVERSE);
         motorFrontLift.setDirection(DcMotor.Direction.FORWARD);
 
-        servoBackJewel.setPosition(180);
+        servoBackJewel.setPosition(90 * servoDegrees);
 
         double intakePower = 0;
         waitForStart();
         runtime.reset();
 
 
-        while (opModeIsActive()) {
 
             double leftPower;
             double rightPower;
             double liftPower = 0;
             double gearMult = 1;
+        while (opModeIsActive()) {
 
-
-            leftPower  = -gamepad1.left_stick_y * gearMult;
+            leftPower = -gamepad1.left_stick_y * gearMult;
             rightPower = -gamepad1.right_stick_y * gearMult;
 
-            if(gamepad1.right_bumper) gearMult = 1;
+            if (gamepad1.right_bumper) gearMult = 1;
 
-            if(gamepad1.left_bumper) gearMult = 0.5;
+            if (gamepad1.left_bumper) gearMult = 0.5;
 
             if (gamepad1.y) liftPower = 1;
             else if (gamepad1.a) liftPower = -1;
             else liftPower = 0;
 
-            if ((gamepad1.left_trigger > 0.8)){
+            if ((gamepad1.left_trigger > 0.8)) {
                 telemetry.addLine("left trigger pressed");
                 intakePower = -.6;
-            }
-            else if ((gamepad1.left_trigger > .2) && (intakePower == -.6))
+            } else if ((gamepad1.left_trigger > .2) && (intakePower == -.6))
                 intakePower = 0;
 
             //if (gamepad1.right_trigger > 0.5)intakePower = 1;
             if (gamepad1.right_trigger > .8) {
                 telemetry.addLine("right trigger pressed");
+                telemetry.update();
                 if (intakePower == 0)
                     intakePower = 1;
                 else if (intakePower == 1)
                     intakePower = 0;
                 //sleep(500);
-               while (gamepad1.right_trigger > .2){
-                   idle();}
+                while (gamepad1.right_trigger > .2) {
+                    idle();
+                }
             }
 
 
@@ -158,3 +158,4 @@ public class Bulbasaur extends LinearOpMode {
         }
     }
 }
+
