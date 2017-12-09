@@ -50,7 +50,6 @@ public class Ivysaur extends LinearOpMode {
     public ElapsedTime runtime = new ElapsedTime();
     public DcMotor motorFrontLeft = null;
     public DcMotor motorFrontRight = null;
-
     public DcMotor  motorBackLeft = null;
     public DcMotor motorBackRight = null;
     public Servo servoBackJewel = null;
@@ -80,7 +79,8 @@ public class Ivysaur extends LinearOpMode {
     static final int anticlockwise = -1;
     static final int glyphside = 1;
     static final int relicside = -1;
-    int ballcolor = colorred;
+    static int ballcolor = colorred;
+    static int rotation = 0;
 
 
 
@@ -107,15 +107,15 @@ public class Ivysaur extends LinearOpMode {
 
         motorFrontLeft.setDirection(DcMotor.Direction.FORWARD);
         motorFrontRight.setDirection(DcMotor.Direction.REVERSE);
-        motorBackLeft.setDirection(DcMotor.Direction.FORWARD);
-        motorBackRight.setDirection(DcMotor.Direction.REVERSE);
+        motorBackLeft.setDirection(DcMotor.Direction.REVERSE);
+        motorBackRight.setDirection(DcMotor.Direction.FORWARD);
 
         moveSensor(sensorup);
         telemetry.addLine("Waiting for start");
         telemetry.update();
 
         //----------Some Ryan Code----------
-        setParam();
+        //setParam();
 
         waitForStart();
         runtime.reset();
@@ -123,6 +123,7 @@ public class Ivysaur extends LinearOpMode {
         telemetry.update();
         //doAutonomous();
         driveStraight(.4,311, 6);
+        sleep(2000);
         telemetry.addLine("Done auto");
         telemetry.update();
 
@@ -155,7 +156,7 @@ public class Ivysaur extends LinearOpMode {
         }
     }
 
-    public void doAutonomous(){int rotation = 0;
+    public void doAutonomous(){
         telemetry.addLine("Sensor down");
         telemetry.update();
 
@@ -185,6 +186,7 @@ public class Ivysaur extends LinearOpMode {
             rotation = clockwise;
         parkInZone(-teamcolor, rotation);
     }
+
     public void moveSensor(double position){ //sensor moves
         servoBackJewel.setPosition(position /256);
 
@@ -249,6 +251,87 @@ public class Ivysaur extends LinearOpMode {
         int newRightTarget;
         int leftDirection;
         int rightDirection;
+        int Running = 1;
+        int BLPos;
+        int FLPos;
+        int BRPos;
+        int FRPos;
+        double leftPower;
+        double rightPower;
+        double targetLeft;
+        double targetRight;
+
+        runtime.reset();
+//        motorBackLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        motorBackRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        motorFrontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        motorFrontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        if (leftMillimeters >= 0) {
+            leftDirection = 1;
+            leftPower = speed;
+        }
+        else {
+            leftDirection = -1;
+            leftPower = -speed;
+        }
+
+        if (rightMillimeters >= 0) {
+            rightDirection = 1;
+            rightPower = speed;
+        }
+        else {
+            rightDirection = -1;
+            rightPower = -speed;
+        }
+
+        targetLeft = Math.abs(leftMillimeters);
+        targetRight = Math.abs(rightMillimeters);
+
+        while ((Running == 1) && opModeIsActive() && (runtime.seconds() < timeoutS))
+        {
+            BLPos = Math.abs(motorBackLeft.getCurrentPosition());
+            FLPos = Math.abs(motorFrontLeft.getCurrentPosition());
+            BRPos = Math.abs(motorBackLeft.getCurrentPosition());
+            FRPos = Math.abs(motorFrontLeft.getCurrentPosition());
+
+            if (BLPos > targetLeft)
+                leftPower = 0;
+
+            if (FLPos > targetLeft)
+                leftPower = 0;
+
+            if (BRPos > targetRight)
+                rightPower = 0;
+
+            if (FRPos > targetRight)
+                rightPower = 0;
+
+            if ((leftPower == 0) && (rightPower == 0))
+                Running = 0;
+
+            motorFrontLeft.setPower(leftPower);
+            motorBackLeft.setPower(leftPower);
+            motorFrontRight.setPower(rightPower);
+            motorBackRight.setPower(rightPower);
+
+            telemetry.addData("Path1", "Running to %7d :%7d", targetLeft, targetRight);
+            telemetry.addData("Path2", "Running at %7d :%7d : %7d : %7d", FLPos, BLPos, FRPos, BRPos);
+            telemetry.update();
+        }
+        motorFrontLeft.setPower(0);
+        motorBackLeft.setPower(0);
+        motorFrontRight.setPower(0);
+        motorBackRight.setPower(0);
+    }
+
+    public void encoderDriveV1(double speed,
+                             double leftMillimeters, double rightMillimeters,
+                             double timeoutS) {
+        int newLeftTarget;
+        int newRightTarget;
+        int leftDirection;
+        int rightDirection;
         if (leftMillimeters >= 0)
             leftDirection = 1;
         else leftDirection = -1;
@@ -274,13 +357,14 @@ public class Ivysaur extends LinearOpMode {
             motorBackLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             motorBackRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-            motorFrontLeft.setTargetPosition((int) (leftMillimeters * COUNTS_PER_MILLIMETERS * leftDirection));
-            motorFrontRight.setTargetPosition((int) (rightMillimeters * COUNTS_PER_MILLIMETERS * rightDirection));
-            motorBackLeft.setTargetPosition((int) (-leftMillimeters * COUNTS_PER_MILLIMETERS * leftDirection));
-            motorBackRight.setTargetPosition((int) (-rightMillimeters * COUNTS_PER_MILLIMETERS * rightMillimeters));
+            newLeftTarget = (int)( leftMillimeters * COUNTS_PER_MILLIMETERS * leftDirection);
+            newRightTarget = (int)( rightMillimeters * COUNTS_PER_MILLIMETERS* rightDirection);
 
-            newLeftTarget = (int)( leftMillimeters * COUNTS_PER_MILLIMETERS);
-            newRightTarget = (int)( rightMillimeters * COUNTS_PER_MILLIMETERS);
+            motorFrontLeft.setTargetPosition((int) newLeftTarget);
+            motorFrontRight.setTargetPosition((int) newRightTarget);
+            motorBackLeft.setTargetPosition((int) newLeftTarget);
+            motorBackRight.setTargetPosition((int) newRightTarget);
+
             // reset the timeout time and start motion.00.
             runtime.reset();
             motorFrontLeft.setPower(Math.abs(speed));
