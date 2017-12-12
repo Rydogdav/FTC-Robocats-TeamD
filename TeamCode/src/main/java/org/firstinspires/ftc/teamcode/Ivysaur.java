@@ -121,17 +121,12 @@ public class Ivysaur extends LinearOpMode {
         runtime.reset();
         telemetry.addLine("Starting auto");
         telemetry.update();
-<<<<<<< HEAD
-<<<<<<< HEAD
         //doAutonomous();
         driveStraight(.4,311, 6);
         sleep(2000);
-=======
         doAutonomous();
->>>>>>> parent of 0f78460... more testing
-=======
         doAutonomous();
->>>>>>> parent of 0f78460... more testing
+        doAutonomous();
         telemetry.addLine("Done auto");
         telemetry.update();
 
@@ -257,8 +252,6 @@ public class Ivysaur extends LinearOpMode {
                              double timeoutS) {
         int newLeftTarget;
         int newRightTarget;
-<<<<<<< HEAD
-<<<<<<< HEAD
         int leftDirection;
         int rightDirection;
         int Running = 1;
@@ -348,11 +341,6 @@ public class Ivysaur extends LinearOpMode {
         if (rightMillimeters >= 0)
             rightDirection = 1;
         else rightDirection = -1;
-
-=======
->>>>>>> parent of 0f78460... more testing
-=======
->>>>>>> parent of 0f78460... more testing
         // Ensure that the opmode is still active
         if (opModeIsActive()) {
             motorBackLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -366,9 +354,6 @@ public class Ivysaur extends LinearOpMode {
             // Turn On RUN_TO_POSITION
             motorFrontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             motorFrontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-<<<<<<< HEAD
-<<<<<<< HEAD
             newLeftTarget = (int)( leftMillimeters * COUNTS_PER_MILLIMETERS * leftDirection);
             newRightTarget = (int)( rightMillimeters * COUNTS_PER_MILLIMETERS* rightDirection);
 
@@ -378,18 +363,18 @@ public class Ivysaur extends LinearOpMode {
             motorBackRight.setTargetPosition((int) newRightTarget);
 
             // reset the timeout time and start motion.00.
-=======
             motorFrontLeft.setTargetPosition((int) (leftMillimeters * COUNTS_PER_MILLIMETERS));
             motorFrontRight.setTargetPosition((int) (rightMillimeters * COUNTS_PER_MILLIMETERS));
 
             // reset the timeout time and start motion.
->>>>>>> parent of 0f78460... more testing
-=======
             motorFrontLeft.setTargetPosition((int) (leftMillimeters * COUNTS_PER_MILLIMETERS));
             motorFrontRight.setTargetPosition((int) (rightMillimeters * COUNTS_PER_MILLIMETERS));
 
             // reset the timeout time and start motion.
->>>>>>> parent of 0f78460... more testing
+            motorFrontLeft.setTargetPosition((int) (leftMillimeters * COUNTS_PER_MILLIMETERS));
+            motorFrontRight.setTargetPosition((int) (rightMillimeters * COUNTS_PER_MILLIMETERS));
+
+            // reset the timeout time and start motion.
             runtime.reset();
             motorFrontLeft.setPower(Math.abs(speed));
             motorFrontRight.setPower(Math.abs(speed));
