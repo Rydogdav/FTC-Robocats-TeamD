@@ -285,12 +285,12 @@ public class Ivysaur extends LinearOpMode {
             rightPower = -speed;
         }
 
-        targetLeft = Math.abs(leftMillimeters);
+        targetLeft = Math.abs(leftMillimeters);   //Maybe error causer
         targetRight = Math.abs(rightMillimeters);
 
         while ((Running == 1) && opModeIsActive() && (runtime.seconds() < timeoutS))
         {
-            BLPos = Math.abs(motorBackLeft.getCurrentPosition());
+            BLPos = Math.abs(motorBackLeft.getCurrentPosition());  //Maybe other error causer
             FLPos = Math.abs(motorFrontLeft.getCurrentPosition());
             BRPos = Math.abs(motorBackLeft.getCurrentPosition());
             FRPos = Math.abs(motorFrontLeft.getCurrentPosition());
