@@ -95,8 +95,8 @@ public class Ivysaur extends LinearOpMode {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
-        motorFrontLeft = hardwareMap.get(DcMotor.class, "right_drive");
-        motorFrontRight = hardwareMap.get(DcMotor.class, "left_drive");
+        motorFrontRight = hardwareMap.get(DcMotor.class, "right_drive");
+        motorFrontLeft = hardwareMap.get(DcMotor.class, "left_drive");
         motorBackLeft = hardwareMap.get(DcMotor.class, "left_omni");
         motorBackRight = hardwareMap.get(DcMotor.class, "right_omni");
 
@@ -105,28 +105,35 @@ public class Ivysaur extends LinearOpMode {
         colorSensor = hardwareMap.get(ColorSensor.class, "jewel_sensor");
         colorSensor.enableLed(true);
 
-        motorFrontLeft.setDirection(DcMotor.Direction.FORWARD);
-        motorFrontRight.setDirection(DcMotor.Direction.REVERSE);
-        motorBackLeft.setDirection(DcMotor.Direction.REVERSE);
-        motorBackRight.setDirection(DcMotor.Direction.FORWARD);
+        motorBackLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorBackRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorFrontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorFrontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        motorBackLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motorBackRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motorFrontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motorFrontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        motorFrontLeft.setDirection(DcMotor.Direction.REVERSE);
+        motorFrontRight.setDirection(DcMotor.Direction.FORWARD);
+        motorBackLeft.setDirection(DcMotor.Direction.FORWARD);
+        motorBackRight.setDirection(DcMotor.Direction.REVERSE);
 
         moveSensor(sensorup);
-        telemetry.addLine("Waiting for start");
-        telemetry.update();
 
         //----------Some Ryan Code----------
         //setParam();
 
+        telemetry.addLine("Waiting for start");
+        telemetry.update();
         waitForStart();
         runtime.reset();
         telemetry.addLine("Starting auto");
         telemetry.update();
         //doAutonomous();
-        driveStraight(.4,311, 6);
-        sleep(2000);
-        doAutonomous();
-        doAutonomous();
-        doAutonomous();
+        driveStraight(.4,600, 6);
+        sleep(5000);
         telemetry.addLine("Done auto");
         telemetry.update();
 
@@ -143,15 +150,23 @@ public class Ivysaur extends LinearOpMode {
             telemetry.update();
             if (gamepad1.a) {
                 teamcolor = colorred;
+                telemetry.addLine("RED TEAM SELECTED");
+                telemetry.update();
             }
             if (gamepad1.b) {
                 teamcolor = colorblue;
+                telemetry.addLine("BLUE TEAM SELECTED");
+                telemetry.update();
             }
             if (gamepad1.x) {
                 startside = glyphside;
+                telemetry.addLine("START @ GLYPH");
+                telemetry.update();
             }
             if (gamepad1.y) {
                 startside = relicside;
+                telemetry.addLine("START @ RELIC");
+                telemetry.update();
             }
             if (gamepad1.right_bumper && gamepad1.left_bumper){
                 confirm = true;
@@ -164,7 +179,7 @@ public class Ivysaur extends LinearOpMode {
         telemetry.update();
 
         moveSensor(sensordown);
-        sleep(2000);
+        sleep(1000);
 
         telemetry.addLine("Detecting color");
         telemetry.update();
@@ -173,11 +188,11 @@ public class Ivysaur extends LinearOpMode {
         telemetry.addLine("Knocking jewel");
         telemetry.update();
         knockjeweloff();
-        sleep(2000);
+        sleep(1000);
         telemetry.addLine("Sensor up");
         telemetry.update();
         moveSensor(sensorup);
-        sleep(2000);
+        sleep(1000);
 
         if ((teamcolor == colorblue) && (startside == glyphside))
             rotation = clockwise;
@@ -187,6 +202,7 @@ public class Ivysaur extends LinearOpMode {
             rotation = anticlockwise;
         else if ((teamcolor == colorred) && (startside == relicside))
             rotation = clockwise;
+
         parkInZone(-teamcolor, rotation);
     }
 
@@ -209,7 +225,7 @@ public class Ivysaur extends LinearOpMode {
         }
         else{
             ballcolor = 0;
-            telemetry.addLine("Ball Color N/A");
+            telemetry.addLine("Ball Color Unknown");
             telemetry.update();
         }
     }
@@ -264,11 +280,15 @@ public class Ivysaur extends LinearOpMode {
         double targetLeft;
         double targetRight;
 
-        runtime.reset();
-//        motorBackLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//        motorBackRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//        motorFrontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//        motorFrontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorBackLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorBackRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorFrontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorFrontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        motorFrontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motorFrontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motorBackLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motorBackRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         if (leftMillimeters >= 0) {
             leftDirection = 1;
@@ -291,6 +311,7 @@ public class Ivysaur extends LinearOpMode {
         targetLeft = Math.abs(leftMillimeters);
         targetRight = Math.abs(rightMillimeters);
 
+        runtime.reset();
         while ((Running == 1) && opModeIsActive() && (runtime.seconds() < timeoutS))
         {
             BLPos = Math.abs(motorBackLeft.getCurrentPosition());
@@ -318,7 +339,7 @@ public class Ivysaur extends LinearOpMode {
             motorFrontRight.setPower(rightPower);
             motorBackRight.setPower(rightPower);
 
-            telemetry.addData("Path1", "Running to %7d :%7d", targetLeft, targetRight);
+            telemetry.addData("Path1", "Running to %7d :%7d", (int)targetLeft, (int)targetRight);
             telemetry.addData("Path2", "Running at %7d :%7d : %7d : %7d", FLPos, BLPos, FRPos, BRPos);
             telemetry.update();
         }
@@ -331,70 +352,52 @@ public class Ivysaur extends LinearOpMode {
     public void encoderDriveV1(double speed,
                              double leftMillimeters, double rightMillimeters,
                              double timeoutS) {
-        int newLeftTarget;
-        int newRightTarget;
-        int leftDirection;
-        int rightDirection;
-        if (leftMillimeters >= 0)
-            leftDirection = 1;
-        else leftDirection = -1;
-        if (rightMillimeters >= 0)
-            rightDirection = 1;
-        else rightDirection = -1;
-        // Ensure that the opmode is still active
+        int newFrontLeftTarget;
+        int newFrontRightTarget;
+        int newBackLeftTarget;
+        int newBackRightTarget;
+
         if (opModeIsActive()) {
-            motorBackLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            motorBackRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            newFrontLeftTarget  = motorFrontLeft.getCurrentPosition()  - (int)( leftMillimeters * COUNTS_PER_MILLIMETERS);
+            newFrontRightTarget = motorFrontRight.getCurrentPosition() + (int)( rightMillimeters * COUNTS_PER_MILLIMETERS);
+            newBackLeftTarget   = motorBackLeft.getCurrentPosition()   + (int)( leftMillimeters * COUNTS_PER_MILLIMETERS);
+            newBackRightTarget  = motorBackRight.getCurrentPosition()  + (int)( rightMillimeters * COUNTS_PER_MILLIMETERS);
 
 
-            // Determine new target position, and pass to motor controller
-//            newLeftTarget = motorFrontLeft.getCurrentPosition() + (int) (leftMillimeters * COUNTS_PER_MILLIMETERS);
-//            newRightTarget = motorFrontRight.getCurrentPosition() + (int) (rightMillimeters * COUNTS_PER_MILLIMETERS);
+            motorFrontLeft.setTargetPosition((int) newFrontLeftTarget);
+            motorFrontRight.setTargetPosition((int) newFrontRightTarget);
+            motorBackLeft.setTargetPosition((int) newBackLeftTarget);
+            motorBackRight.setTargetPosition((int) newBackRightTarget);
 
-            // Turn On RUN_TO_POSITION
+
             motorFrontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             motorFrontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            newLeftTarget = (int)( leftMillimeters * COUNTS_PER_MILLIMETERS * leftDirection);
-            newRightTarget = (int)( rightMillimeters * COUNTS_PER_MILLIMETERS* rightDirection);
-
-            motorFrontLeft.setTargetPosition((int) newLeftTarget);
-            motorFrontRight.setTargetPosition((int) newRightTarget);
-            motorBackLeft.setTargetPosition((int) newLeftTarget);
-            motorBackRight.setTargetPosition((int) newRightTarget);
-
-            // reset the timeout time and start motion.00.
-            motorFrontLeft.setTargetPosition((int) (leftMillimeters * COUNTS_PER_MILLIMETERS));
-            motorFrontRight.setTargetPosition((int) (rightMillimeters * COUNTS_PER_MILLIMETERS));
-
-            // reset the timeout time and start motion.
-            motorFrontLeft.setTargetPosition((int) (leftMillimeters * COUNTS_PER_MILLIMETERS));
-            motorFrontRight.setTargetPosition((int) (rightMillimeters * COUNTS_PER_MILLIMETERS));
-
-            // reset the timeout time and start motion.
-            motorFrontLeft.setTargetPosition((int) (leftMillimeters * COUNTS_PER_MILLIMETERS));
-            motorFrontRight.setTargetPosition((int) (rightMillimeters * COUNTS_PER_MILLIMETERS));
+            motorBackLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            motorBackRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
             // reset the timeout time and start motion.
             runtime.reset();
             motorFrontLeft.setPower(Math.abs(speed));
-            motorFrontRight.setPower(Math.abs(speed));
+//            motorFrontRight.setPower(Math.abs(speed));
+//            motorBackLeft.setPower(Math.abs(speed));
+//            motorBackRight.setPower(Math.abs(speed));
 
-            // keep looping while we are still active, and there is time left, and both motors are running.
-            // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
-            // its target position, the motion will stop.  This is "safer" in the event that the robot will
-            // always end the motion as soon as possible.
-            // However, if you require that BOTH motors have finished their moves before the robot continues
-            // onto the next step, use (isBusy() || isBusy()) in the loop test.
+            telemetry.addLine("Drive start");
+            telemetry.update();
+
             while (opModeIsActive() &&
                     (runtime.seconds() < timeoutS) &&
-                    (motorFrontLeft.isBusy() && motorFrontRight.isBusy())) {
+                    (motorFrontLeft.isBusy() && motorFrontRight.isBusy()) &&
+                    (motorBackLeft.isBusy() && motorBackRight.isBusy())) {
 
                 // Display it for the driver.
-//                telemetry.addData("Path1", "Running to %7d :%7d", newLeftTarget, newRightTarget);
-//                telemetry.addData("Path2", "Running at %7d :%7d",
-//                        motorFrontLeft.getCurrentPosition(),
-//                        motorFrontRight.getCurrentPosition());
-//                telemetry.update();
+                telemetry.addData("Path1", "Running to %7d :%7d %7d :%7d", newFrontLeftTarget, newFrontRightTarget, newBackLeftTarget, newBackRightTarget);
+                telemetry.addData("Path2", "Running at %7d :%7d :%7d :%7d",
+                        motorFrontLeft.getCurrentPosition(),
+                        motorFrontRight.getCurrentPosition(),
+                        motorBackLeft.getCurrentPosition(),
+                        motorBackRight.getCurrentPosition());
+                telemetry.update();
             }
 
             // Stop all motion;
