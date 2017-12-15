@@ -88,10 +88,10 @@ public class Bulbasaur extends LinearOpMode {
         sensorBackJewel = hardwareMap.get(ColorSensor.class, "jewel_sensor");
 
         motorFrontLeft.setDirection(DcMotor.Direction.REVERSE);
-        motorFrontRight.setDirection(DcMotor.Direction.FORWARD);
-        motorBackLeft.setDirection(DcMotor.Direction.REVERSE);
+        motorFrontRight.setDirection(DcMotor.Direction.REVERSE);
+        motorBackLeft.setDirection(DcMotor.Direction.FORWARD);
         motorBackRight.setDirection(DcMotor.Direction.FORWARD);
-        motorLeftIntake.setDirection(DcMotor.Direction.FORWARD);
+        motorLeftIntake.setDirection(DcMotor.Direction.REVERSE);
         motorRightIntake.setDirection(DcMotor.Direction.REVERSE);
         motorFrontLift.setDirection(DcMotor.Direction.FORWARD);
 
@@ -143,8 +143,8 @@ public class Bulbasaur extends LinearOpMode {
 
             // Send calculated power to wheels
             motorFrontLeft.setPower(leftPower);
-            motorBackLeft.setPower(leftPower);
-            motorFrontRight.setPower(rightPower);
+            motorBackLeft.setPower(rightPower);
+            motorFrontRight.setPower(leftPower);
             motorBackRight.setPower(rightPower);
             motorFrontLift.setPower(liftPower);
             motorLeftIntake.setPower(intakePower);
