@@ -120,7 +120,7 @@ public class Ivysaur extends LinearOpMode {
         motorBackLeft.setDirection(DcMotor.Direction.FORWARD);     //REVERSE
         motorBackRight.setDirection(DcMotor.Direction.FORWARD);
 
-        moveSensor(sensorup);
+        //moveSensor(sensorup);
 
         //----------Some Ryan Code----------
         //setParam();
@@ -148,8 +148,8 @@ public class Ivysaur extends LinearOpMode {
         telemetry.update();
 
         
-    }
-    public void setParam () {
+    }}
+   /*public void setParam () {
         while(!confirm && opModeIsActive()){
             telemetry.addData("Team Color", teamcolor);
             telemetry.addData("Robot Placement", startside);
@@ -179,23 +179,24 @@ public class Ivysaur extends LinearOpMode {
                 telemetry.update();
             }
             if (gamepad1.right_bumper && gamepad1.left_bumper){
-                confirm = true;
-            }
-        }
-    }
-
-    public void doAutonomous(){
-        telemetry.addLine("Sensor down");
-        telemetry.update();
+                confirm = true; }}}}
+           // }
+       // }
+   // }
+*/
+    void doAutonomous(){
 
         moveSensor(sensordown);
         sleep(1000);
+
+        telemetry.addLine("Sensor down");
+        telemetry.update();
 
         telemetry.addLine("Detecting color");
         telemetry.update();
         detectcolor();
 
-        telemetry.addLine("Knocking jewel");
+        /*telemetry.addLine("Knocking jewel");
         telemetry.update();
         knockjeweloff();
         sleep(1000);
@@ -213,14 +214,14 @@ public class Ivysaur extends LinearOpMode {
         else if ((teamcolor == colorred) && (startside == relicside))
             rotation = clockwise;
 
-        parkInZone(-teamcolor, rotation);
+        parkInZone(-teamcolor, rotation);*/
     }
 
     public void moveSensor(double position){ //sensor moves
         servoBackJewel.setPosition(position /256); //remove /256
 
     }
-    public void detectcolor() {
+   public void detectcolor() {
 
         //detect ball color
          if (colorSensor.blue() > colorSensor.red()){
@@ -239,7 +240,7 @@ public class Ivysaur extends LinearOpMode {
             telemetry.update();
         }
     }
-
+/*
     public void knockjeweloff(){
         if (ballcolor == teamcolor) {
             driveStraight(.4, -jewelknockdistance, 6);
