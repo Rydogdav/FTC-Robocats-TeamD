@@ -137,7 +137,7 @@ public class Ivysaur extends LinearOpMode {
         telemetry.addLine("Done auto");
         telemetry.update();
 
-        
+
     }}
    /*public void setParam () {
         while(!confirm && opModeIsActive()){
