@@ -105,20 +105,20 @@ public class Ivysaur extends LinearOpMode {
         colorSensor = hardwareMap.get(ColorSensor.class, "jewel_sensor");
         colorSensor.enableLed(true);
 
-       // motorBackLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-       // motorBackRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-       // motorFrontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-       // motorFrontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorBackLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorBackRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorFrontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorFrontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-     //   motorBackLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-     //   motorBackRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-      //  motorFrontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-     //   motorFrontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motorBackLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motorBackRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motorFrontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motorFrontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         motorFrontLeft.setDirection(DcMotor.Direction.REVERSE);
-        motorFrontRight.setDirection(DcMotor.Direction.REVERSE);   //FORWARD
-        motorBackLeft.setDirection(DcMotor.Direction.FORWARD);     //REVERSE
-        motorBackRight.setDirection(DcMotor.Direction.FORWARD);
+        motorFrontRight.setDirection(DcMotor.Direction.FORWARD);
+        motorBackLeft.setDirection(DcMotor.Direction.FORWARD);
+        motorBackRight.setDirection(DcMotor.Direction.REVERSE);
 
         //moveSensor(sensorup);
 
@@ -132,18 +132,8 @@ public class Ivysaur extends LinearOpMode {
         telemetry.addLine("Starting auto");
         telemetry.update();
         //doAutonomous();
-       // driveStraight(.4,600, 6);
-       // sleep(7000);
-        // from 5000
-        motorFrontLeft.setPower(1);
-        motorBackLeft.setPower(1);
-        motorBackRight.setPower(1);
-        motorFrontLeft.setPower(1);
+        driveStraight(.4,600, 6);
         sleep(5000);
-        motorFrontLeft.setPower(0);
-        motorBackLeft.setPower(0);
-        motorBackRight.setPower(0);
-        motorFrontLeft.setPower(0);
         telemetry.addLine("Done auto");
         telemetry.update();
 
@@ -306,7 +296,7 @@ public class Ivysaur extends LinearOpMode {
             leftPower = speed;
         }
         else {
-            leftDirection = -1;  //from-nvm
+            leftDirection = -1;
             leftPower = -speed;
         }
 
@@ -315,7 +305,7 @@ public class Ivysaur extends LinearOpMode {
             rightPower = speed;
         }
         else {
-            rightDirection = -1;    //from-nvm
+            rightDirection = -1;
             rightPower = -speed;
         }
 
@@ -327,8 +317,8 @@ public class Ivysaur extends LinearOpMode {
         {
             BLPos = Math.abs(motorBackLeft.getCurrentPosition());
             FLPos = Math.abs(motorFrontLeft.getCurrentPosition());
-            BRPos = Math.abs(motorBackRight.getCurrentPosition());
-            FRPos = Math.abs(motorFrontRight.getCurrentPosition());
+            BRPos = Math.abs(motorBackLeft.getCurrentPosition());
+            FRPos = Math.abs(motorFrontLeft.getCurrentPosition());
 
             if (BLPos > targetLeft)
                 leftPower = 0;
