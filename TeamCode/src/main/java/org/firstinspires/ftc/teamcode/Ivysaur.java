@@ -218,7 +218,7 @@ public class Ivysaur extends LinearOpMode {
     }
 
     public void moveSensor(double position){ //sensor moves
-        servoBackJewel.setPosition(position /256); //remove /256
+        servoBackJewel.setPosition(position /256);
 
     }
    public void detectcolor() {
