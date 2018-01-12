@@ -58,7 +58,7 @@ public class Ivysaur extends LinearOpMode {
     public double servoDegrees;
     public double servoEquation = 1 / 255 * servoDegrees;
 
-    static final double COUNTS_PER_MOTOR_REV = 4;    // eg: TETRIX Motor Encoder
+    static final double COUNTS_PER_MOTOR_REV = 32;    // eg: TETRIX Motor Encoder
     static final double DRIVE_GEAR_REDUCTION = 40.0;     // This is < 1.0 if geared UP
     static final double WHEEL_DIAMETER_MILLIMETERS = 94.0;     // For figuring circumference
     static final double COUNTS_PER_MILLIMETERS = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
@@ -95,18 +95,18 @@ public class Ivysaur extends LinearOpMode {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
-        motorFrontLeft = hardwareMap.get(DcMotor.class, "right_drive");
-        motorFrontRight = hardwareMap.get(DcMotor.class, "left_drive");
-        motorBackLeft = hardwareMap.get(DcMotor.class, "left_omni");
-        motorBackRight = hardwareMap.get(DcMotor.class, "right_omni");
+        motorFrontLeft  = hardwareMap.get(DcMotor.class, "left_omni");
+        motorFrontRight = hardwareMap.get(DcMotor.class, "right_omni");
+        motorBackLeft   = hardwareMap.get(DcMotor.class, "left_drive");
+        motorBackRight  = hardwareMap.get(DcMotor.class, "right_drive");
 
         servoBackJewel = hardwareMap.get(Servo.class, "jewel_servo");
         //sensorBackJewel = hardwareMap.get(ColorSensor.class, "jewel_sensor");
         colorSensor = hardwareMap.get(ColorSensor.class, "jewel_sensor");
         colorSensor.enableLed(true);
 
-        motorFrontLeft.setDirection(DcMotor.Direction.FORWARD);
-        motorFrontRight.setDirection(DcMotor.Direction.REVERSE);
+        motorFrontLeft.setDirection(DcMotor.Direction.REVERSE);
+        motorFrontRight.setDirection(DcMotor.Direction.FORWARD);
         motorBackLeft.setDirection(DcMotor.Direction.REVERSE);
         motorBackRight.setDirection(DcMotor.Direction.FORWARD);
 
@@ -122,16 +122,42 @@ public class Ivysaur extends LinearOpMode {
         telemetry.addLine("Starting auto");
         telemetry.update();
         //doAutonomous();
-        driveStraight(.4,311, 6);
-        sleep(2000);
-        doAutonomous();
-        doAutonomous();
-        doAutonomous();
+//        driveStraight(.4,311, 6);
+        DoTest();
+//        sleep(2000);
+//        doAutonomous();
+//        doAutonomous();
+//        doAutonomous();
         telemetry.addLine("Done auto");
         telemetry.update();
 
         
     }
+
+    public void DoTest()
+    {
+        /*
+        motorFrontLeft.setPower(.4);
+        sleep(4000);
+        motorFrontLeft.setPower(0);
+
+        motorBackLeft.setPower(.4);
+        sleep(4000);
+        motorBackLeft.setPower(0);
+
+        motorFrontRight.setPower(.4);
+        sleep(4000);
+        motorFrontRight.setPower(0);
+
+        motorBackRight.setPower(.4);
+        sleep(4000);
+        motorBackRight.setPower(0);
+        */
+
+        driveStraight(.4,311, 6);
+
+    }
+
     public void setParam () {
         while(!confirm && opModeIsActive()){
             telemetry.addData("Team Color", teamcolor);
@@ -244,7 +270,7 @@ public class Ivysaur extends LinearOpMode {
 
     public void driveStraight(double speed, double distanceinmilimeters, double timeoutS){
 
-        encoderDrive(speed, distanceinmilimeters, distanceinmilimeters, timeoutS);
+        encoderDriveV1(speed, distanceinmilimeters, distanceinmilimeters, timeoutS);
     }
 
     public void encoderDrive(double speed,
@@ -265,10 +291,10 @@ public class Ivysaur extends LinearOpMode {
         double targetRight;
 
         runtime.reset();
-//        motorBackLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//        motorBackRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//        motorFrontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//        motorFrontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorBackLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorBackRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorFrontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorFrontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         if (leftMillimeters >= 0) {
             leftDirection = 1;
@@ -345,6 +371,8 @@ public class Ivysaur extends LinearOpMode {
         if (opModeIsActive()) {
             motorBackLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             motorBackRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            motorFrontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            motorFrontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
 
             // Determine new target position, and pass to motor controller
@@ -354,6 +382,8 @@ public class Ivysaur extends LinearOpMode {
             // Turn On RUN_TO_POSITION
             motorFrontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             motorFrontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            motorBackLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            motorBackRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             newLeftTarget = (int)( leftMillimeters * COUNTS_PER_MILLIMETERS * leftDirection);
             newRightTarget = (int)( rightMillimeters * COUNTS_PER_MILLIMETERS* rightDirection);
 
@@ -365,19 +395,16 @@ public class Ivysaur extends LinearOpMode {
             // reset the timeout time and start motion.00.
             motorFrontLeft.setTargetPosition((int) (leftMillimeters * COUNTS_PER_MILLIMETERS));
             motorFrontRight.setTargetPosition((int) (rightMillimeters * COUNTS_PER_MILLIMETERS));
+            motorBackLeft.setTargetPosition((int) (leftMillimeters * COUNTS_PER_MILLIMETERS));
+            motorBackRight.setTargetPosition((int) (rightMillimeters * COUNTS_PER_MILLIMETERS));
 
-            // reset the timeout time and start motion.
-            motorFrontLeft.setTargetPosition((int) (leftMillimeters * COUNTS_PER_MILLIMETERS));
-            motorFrontRight.setTargetPosition((int) (rightMillimeters * COUNTS_PER_MILLIMETERS));
-
-            // reset the timeout time and start motion.
-            motorFrontLeft.setTargetPosition((int) (leftMillimeters * COUNTS_PER_MILLIMETERS));
-            motorFrontRight.setTargetPosition((int) (rightMillimeters * COUNTS_PER_MILLIMETERS));
 
             // reset the timeout time and start motion.
             runtime.reset();
             motorFrontLeft.setPower(Math.abs(speed));
             motorFrontRight.setPower(Math.abs(speed));
+            motorBackLeft.setPower(Math.abs(speed));
+            motorBackRight.setPower(Math.abs(speed));
 
             // keep looping while we are still active, and there is time left, and both motors are running.
             // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
@@ -390,20 +417,27 @@ public class Ivysaur extends LinearOpMode {
                     (motorFrontLeft.isBusy() && motorFrontRight.isBusy())) {
 
                 // Display it for the driver.
-//                telemetry.addData("Path1", "Running to %7d :%7d", newLeftTarget, newRightTarget);
-//                telemetry.addData("Path2", "Running at %7d :%7d",
-//                        motorFrontLeft.getCurrentPosition(),
-//                        motorFrontRight.getCurrentPosition());
-//                telemetry.update();
+                telemetry.addData("Path1", "Running to %7d :%7d :%7d :%7d", newLeftTarget, newRightTarget, newLeftTarget, newRightTarget);
+                telemetry.addData("Path2", "Running at %7d :%7d :%7d :%7d",
+                        motorFrontLeft.getCurrentPosition(),
+                        motorFrontRight.getCurrentPosition(),
+                        motorBackLeft.getCurrentPosition(),
+                        motorBackRight.getCurrentPosition()
+                );
+                telemetry.update();
             }
 
             // Stop all motion;
             motorFrontLeft.setPower(0);
             motorFrontRight.setPower(0);
+            motorBackLeft.setPower(0);
+            motorBackRight.setPower(0);
 
             // Turn off RUN_TO_POSITION
             motorFrontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             motorFrontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            motorBackLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            motorBackRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
             //  sleep(250);   // optional pause after each move
         }
