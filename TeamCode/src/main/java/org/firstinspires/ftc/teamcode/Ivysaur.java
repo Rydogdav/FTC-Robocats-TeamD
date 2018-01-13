@@ -113,18 +113,13 @@ public class Ivysaur extends LinearOpMode {
         telemetry.update();
 
         //----------Some Ryan Code----------
-        //setParam();
+        setParam();
 
         waitForStart();
         runtime.reset();
         telemetry.addLine("Starting auto");
         telemetry.update();
-        //doAutonomous();
- //       driveStraight(.4,314, 6);
-//        DoTest();
-//        sleep(2000);
         doAutonomous();
-//        autotesting(100.0);
         telemetry.addLine("Done auto");
         telemetry.update();
 
