@@ -53,27 +53,26 @@ public class Ivysaur extends LinearOpMode {
     public DcMotor  motorBackLeft = null;
     public DcMotor motorBackRight = null;
     public Servo servoBackJewel = null;
-    //public ColorSensor sensorBackJewel = null;
     public ColorSensor colorSensor = null;
     public double servoDegrees;
     public double servoEquation = 1 / 255 * servoDegrees;
 
-    static final double COUNTS_PER_MOTOR_REV = 32;    // eg: TETRIX Motor Encoder
+    static final double COUNTS_PER_MOTOR_REV = 28;    // eg: TETRIX Motor Encoder
     static final double DRIVE_GEAR_REDUCTION = 40.0;     // This is < 1.0 if geared UP
-    static final double WHEEL_DIAMETER_MILLIMETERS = 94.0;     // For figuring circumference
+    static final double WHEEL_DIAMETER_MILLIMETERS = 100.0;     // For figuring circumference
     static final double COUNTS_PER_MILLIMETERS = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
             (WHEEL_DIAMETER_MILLIMETERS * 3.1415);
     static final double DRIVE_SPEED = 0.6;
     static final double TURN_SPEED = 0.5;
 
-    static final double sensordown = 40;
+    static final double sensordown = 20;
     static final double sensorup = 200;
     static final int colorblue = -1;
     static final int colorred = 1;
     static final int ballred = colorred;
     static final int ballblue = colorblue;
     static final double jewelknockdistance = 70;
-    static final double zonedistance = 300;
+    static final double zonedistance = 700;
     static final double finalpushdist = 50;
     static final int clockwise = 1;
     static final int anticlockwise = -1;
@@ -101,7 +100,6 @@ public class Ivysaur extends LinearOpMode {
         motorBackRight  = hardwareMap.get(DcMotor.class, "right_drive");
 
         servoBackJewel = hardwareMap.get(Servo.class, "jewel_servo");
-        //sensorBackJewel = hardwareMap.get(ColorSensor.class, "jewel_sensor");
         colorSensor = hardwareMap.get(ColorSensor.class, "jewel_sensor");
         colorSensor.enableLed(true);
 
@@ -122,12 +120,11 @@ public class Ivysaur extends LinearOpMode {
         telemetry.addLine("Starting auto");
         telemetry.update();
         //doAutonomous();
-//        driveStraight(.4,311, 6);
-        DoTest();
+ //       driveStraight(.4,314, 6);
+//        DoTest();
 //        sleep(2000);
-//        doAutonomous();
-//        doAutonomous();
-//        doAutonomous();
+        doAutonomous();
+//        autotesting(100.0);
         telemetry.addLine("Done auto");
         telemetry.update();
 
@@ -157,6 +154,14 @@ public class Ivysaur extends LinearOpMode {
         driveStraight(.4,311, 6);
 
     }
+
+    public void autotesting (double position) {
+        servoBackJewel.setPosition(position /256);
+
+
+    }
+
+
 
     public void setParam () {
         while(!confirm && opModeIsActive()){
@@ -252,14 +257,14 @@ public class Ivysaur extends LinearOpMode {
     public void parkInZone(int direction, int rotation) {
         double correctiondistance;
         if (ballcolor == teamcolor)
-            correctiondistance = -jewelknockdistance;
-        else if (ballcolor != 0)
             correctiondistance = jewelknockdistance;
+        else if (ballcolor != 0)
+            correctiondistance = -jewelknockdistance;
         else
             correctiondistance = 0;
         driveStraight(.4, (zonedistance + correctiondistance)*direction, 6);
-        turnRobot(rotation, 45);
-        driveStraight(.4, finalpushdist*direction, 6);
+       // turnRobot(rotation, 45);
+       // driveStraight(.4, finalpushdist*direction, 6);
     }
     public void turnRobot(int rotationDirection, int angle){
         double distance;
@@ -345,7 +350,7 @@ public class Ivysaur extends LinearOpMode {
             motorBackRight.setPower(rightPower);
 
             telemetry.addData("Path1", "Running to %7d :%7d", targetLeft, targetRight);
-            telemetry.addData("Path2", "Running at %7d :%7d : %7d : %7d", FLPos, BLPos, FRPos, BRPos);
+           // telemetry.addData("Path2", "Running at %7d :%7d : %7d : %7d", FLPos, BLPos, FRPos, BRPos);
             telemetry.update();
         }
         motorFrontLeft.setPower(0);
