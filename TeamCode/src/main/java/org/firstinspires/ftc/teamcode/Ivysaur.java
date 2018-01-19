@@ -83,8 +83,8 @@ public class Ivysaur extends LinearOpMode {
 
 
 
-    static int startside = glyphside;
-    static int teamcolor = colorblue;
+    static int startside = relicside;
+    static int teamcolor = colorred;
     static boolean confirm = false;
 
 
@@ -159,7 +159,7 @@ public class Ivysaur extends LinearOpMode {
 
 
     public void setParam () {
-        while(!confirm && opModeIsActive()){
+      /*  while(!confirm && opModeIsActive()){
             telemetry.addData("Team Color", teamcolor);
             telemetry.addData("Robot Placement", startside);
             telemetry.addLine("Press A for Red Alliance, B for Blue Alliance.");
@@ -183,7 +183,7 @@ public class Ivysaur extends LinearOpMode {
                 confirm = true;
             }
         }
-    }
+   */ }
 
     public void doAutonomous(){
         telemetry.addLine("Sensor down");
