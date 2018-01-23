@@ -214,6 +214,7 @@ public class Ivysaur extends LinearOpMode {
         else if ((teamcolor == colorred) && (startside == relicside))
             rotation = clockwise;
         parkInZone(-teamcolor, rotation);
+        Turn90(1);
     }
 
     public void moveSensor(double position){ //sensor moves
@@ -239,6 +240,11 @@ public class Ivysaur extends LinearOpMode {
             telemetry.update();
         }
     }
+
+    public void Turn90(double turn) {
+        encoderDrive(.5, -127 * turn, 127 * turn, 6);       //(Left Wheel Distance (IN.), Right-Wheel Distance, Timeout (Sec))
+    }
+
 
     public void knockjeweloff(){
         if (ballcolor == teamcolor) {
