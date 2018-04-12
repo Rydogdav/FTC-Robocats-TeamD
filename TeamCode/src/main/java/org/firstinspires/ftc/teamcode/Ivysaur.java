@@ -84,7 +84,7 @@ public class Ivysaur extends LinearOpMode {
 
 
     static int startside = relicside;
-    static int teamcolor = colorred;
+    static int teamcolor = colorblue;
     static boolean confirm = false;
 
 

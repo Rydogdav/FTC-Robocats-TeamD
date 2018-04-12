@@ -62,14 +62,23 @@ public class Bulbasaur extends LinearOpMode {
     public DcMotor motorFrontRight = null;
     public DcMotor motorBackLeft = null;
     public DcMotor motorBackRight = null;
-    public DcMotor motorLeftIntake = null;
-    public DcMotor motorRightIntake = null;
+    //public DcMotor motorLeftIntake = null;
+    //public DcMotor motorRightIntake = null;
     public DcMotor motorFrontLift = null;
     public Servo servoBackJewel = null;
+    public Servo servoGrabRightTop = null;
+    public Servo servoGrabRightBottom = null;
+    public Servo servoGrabLeftTop = null;
+    public Servo servoGrabLeftBottom = null;
     public ColorSensor sensorBackJewel = null;
+
+    public final double SERVO_OPEN = 0.0;
+    public final double SERVO_CLOSED = 1.0;
+    public int toggle = -1;
 
     public double servoDegrees;
     public double servoEquation = 1/255 * servoDegrees;
+
 
 
     @Override
@@ -81,18 +90,22 @@ public class Bulbasaur extends LinearOpMode {
         motorFrontRight = hardwareMap.get(DcMotor.class, "right_drive");
         motorBackLeft = hardwareMap.get(DcMotor.class, "left_omni");
         motorBackRight = hardwareMap.get(DcMotor.class, "right_omni");
-        motorLeftIntake = hardwareMap.get(DcMotor.class, "left_intake");
-        motorRightIntake = hardwareMap.get(DcMotor.class, "right_intake");
+        //motorLeftIntake = hardwareMap.get(DcMotor.class, "left_intake");
+        //motorRightIntake = hardwareMap.get(DcMotor.class, "right_intake");
         motorFrontLift = hardwareMap.get(DcMotor.class, "front_lift");
         servoBackJewel = hardwareMap.get(Servo.class, "jewel_servo");
+        servoGrabRightTop = hardwareMap.get(Servo.class, "right_top");
+        servoGrabRightBottom = hardwareMap.get(Servo.class, "right_bottom");
+        servoGrabLeftTop = hardwareMap.get(Servo.class, "left_top");
+        servoGrabLeftBottom = hardwareMap.get(Servo.class, "left_bottom");
         sensorBackJewel = hardwareMap.get(ColorSensor.class, "jewel_sensor");
 
         motorFrontLeft.setDirection(DcMotor.Direction.REVERSE);
         motorFrontRight.setDirection(DcMotor.Direction.FORWARD);
         motorBackLeft.setDirection(DcMotor.Direction.REVERSE);
         motorBackRight.setDirection(DcMotor.Direction.FORWARD);
-        motorLeftIntake.setDirection(DcMotor.Direction.FORWARD);
-        motorRightIntake.setDirection(DcMotor.Direction.REVERSE);
+        //motorLeftIntake.setDirection(DcMotor.Direction.FORWARD);
+        //motorRightIntake.setDirection(DcMotor.Direction.REVERSE);
         motorFrontLift.setDirection(DcMotor.Direction.FORWARD);
 
         servoBackJewel.setPosition(200.0/256);
@@ -103,10 +116,10 @@ public class Bulbasaur extends LinearOpMode {
 
 
 
-            double leftPower;
-            double rightPower;
-            double liftPower = 0;
-            double gearMult = 1;
+        double leftPower;
+        double rightPower;
+        double liftPower = 0;
+        double gearMult = 1;
         while (opModeIsActive()) {
 
             leftPower = -gamepad1.left_stick_y * gearMult;
@@ -120,7 +133,10 @@ public class Bulbasaur extends LinearOpMode {
             else if (gamepad1.a) liftPower = -1;
             else liftPower = 0;
 
-            if ((gamepad1.left_trigger > 0.8)) {
+            if (gamepad1.a) toggle *= -1;
+            if (toggle == -1)
+
+            /*if ((gamepad1.left_trigger > 0.8)) {
                 telemetry.addLine("left trigger pressed");
                 intakePower = -.6;
             } else if ((gamepad1.left_trigger > .2) && (intakePower == -.6))
@@ -138,7 +154,7 @@ public class Bulbasaur extends LinearOpMode {
                 while (gamepad1.right_trigger > .2) {
                     idle();
                 }
-            }
+            }*/
 
 
             // Send calculated power to wheels
@@ -147,8 +163,8 @@ public class Bulbasaur extends LinearOpMode {
             motorFrontRight.setPower(rightPower);
             motorBackRight.setPower(rightPower);
             motorFrontLift.setPower(liftPower);
-            motorLeftIntake.setPower(intakePower);
-            motorRightIntake.setPower(intakePower);
+            /*motorLeftIntake.setPower(intakePower);
+            motorRightIntake.setPower(intakePower);*/
 
             // Show the elapsed game time and wheel power.
             //telemetry.addData("Status", "Run Time: " + runtime.toString());
