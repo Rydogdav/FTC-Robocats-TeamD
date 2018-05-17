@@ -75,7 +75,7 @@ public class Bulbasaur extends LinearOpMode {
     public final double SERVO_OPEN = 0.0;
     public final double SERVO_CLOSED = 1.0;
     public int toggle = -1;
-
+    public int x = 0;
     public double servoDegrees;
     public double servoEquation = 1/255 * servoDegrees;
 
@@ -115,26 +115,45 @@ public class Bulbasaur extends LinearOpMode {
         runtime.reset();
 
 
+        /*servoGrabLeftTop.setPosition(1.0);
+        telemetry.addLine("1.0");
+        telemetry.update();
+        sleep(3000);
+        servoGrabLeftTop.setPosition(0.0);
+        telemetry.addLine("0.0");
+        telemetry.update();*/
 
         double leftPower;
         double rightPower;
         double liftPower = 0;
         double gearMult = 1;
+        double closePositonTop = 0.35;      // smaller the value makes the arms close more
+        double closePostionBottom = 0.30;
         while (opModeIsActive()) {
 
             leftPower = -gamepad1.left_stick_y * gearMult;
             rightPower = -gamepad1.right_stick_y * gearMult;
+            if(gamepad1.right_bumper){   //185 145 25 60
+                servoGrabRightTop.setPosition(1);
+                servoGrabLeftTop.setPosition(0);
+                servoGrabRightBottom.setPosition(1);
+                servoGrabLeftBottom.setPosition(0);
+            }
+            if(gamepad1.left_bumper){
+                servoGrabRightTop.setPosition(0+closePositonTop);
+                servoGrabLeftTop.setPosition(1-closePositonTop);
+                servoGrabRightBottom.setPosition(0+closePostionBottom);
+                servoGrabLeftBottom.setPosition(1-closePostionBottom);
+            }
+            if (gamepad1.y) gearMult = 1;
 
-            if (gamepad1.right_bumper) gearMult = 1;
+            if (gamepad1.a) gearMult = 0.5;
 
-            if (gamepad1.left_bumper) gearMult = 0.5;
-
-            if (gamepad1.y) liftPower = 1;
-            else if (gamepad1.a) liftPower = -1;
+            if (gamepad1.left_trigger > 0) liftPower = 1;
+            else if (gamepad1.right_trigger > 0) liftPower = -1;
             else liftPower = 0;
 
-            if (gamepad1.a) toggle *= -1;
-            if (toggle == -1)
+
 
             /*if ((gamepad1.left_trigger > 0.8)) {
                 telemetry.addLine("left trigger pressed");

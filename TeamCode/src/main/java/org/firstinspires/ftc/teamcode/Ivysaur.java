@@ -65,7 +65,7 @@ public class Ivysaur extends LinearOpMode {
     static final double DRIVE_SPEED = 0.6;
     static final double TURN_SPEED = 0.5;
 
-    static final double sensordown = 20;
+    static final double sensordown = 2;
     static final double sensorup = 200;
     static final int colorblue = -1;
     static final int colorred = 1;
